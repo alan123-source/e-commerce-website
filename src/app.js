@@ -1,4 +1,6 @@
 import express from 'express';
+import userRoutes from "./routes/userRoutes.js";
+import { protect } from './middleware/authmiddleware.js';
 const app=express();
 //built in miidlewares
 app.use(express.json());
@@ -7,5 +9,14 @@ app.get('/',(req,res)=>{
   res.send("ecommerce api is running");
 }
 );
+
+//protected route
+app.get("/api/protected",protect,(req,res)=>{
+  res.json({
+    message:"you are authorized",
+    user:req.user
+  });
+});
+app.use("/api/users",userRoutes);
 
 export default app;
