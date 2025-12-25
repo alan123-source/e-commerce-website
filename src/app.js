@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoutes from "./routes/userRoutes.js";
 import { protect } from './middleware/authmiddleware.js';
+import productRoutes from "./routes/productRoutes.js";
 const app=express();
 //built in miidlewares
 app.use(express.json());
@@ -18,5 +19,6 @@ app.get("/api/protected",protect,(req,res)=>{
   });
 });
 app.use("/api/users",userRoutes);
+app.use("/api/products",productRoutes);
 
 export default app;
