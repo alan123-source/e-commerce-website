@@ -31,5 +31,14 @@ export const protect=async(req,res,next)=>{
        }
 
     };
+    //here protect runs first and set req.user and it
+    //  is used by this admin middleware
+    export const admin=(req,res,next)=>{
+      if(req.user&&req.user.role=="admin"){
+         next();
+      }else{
+         res.status(403).json({message:"admin access only"});
+      }
+    };
 
 

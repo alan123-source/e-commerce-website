@@ -1,6 +1,6 @@
 import express from "express";
 import { CreateProduct,getProducts,getProductById } from "../controllers/productController.js";
-import { protect } from "../middleware/authmiddleware.js";
+import { protect,admin} from "../middleware/authmiddleware.js";
 
 const router=express.Router();
 
@@ -8,6 +8,11 @@ const router=express.Router();
 router.get("/",getProducts);
 router.get("/:id",getProductById);
 
-//protected route//
-router.post("/",protect,CreateProduct);
+//protected route admin only//
+router.post("/",protect,admin,CreateProduct);
 export default router;
+
+/*the flow is from protect->admin->controler
+no token blocked by protect token but not admin 
+blocked by admin
+admin allowd to create product*/
