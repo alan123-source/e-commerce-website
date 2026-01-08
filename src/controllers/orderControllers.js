@@ -30,3 +30,27 @@ export const getAllOrders=async(req,res)=>{
     //  the user colection only name and email
     res.json(orders);
 };
+
+//Admin only update order status//
+export const updateOrderStatus=async(req,res)=>{
+    const order=await Order.findById(req.params.id);
+    if (!order){
+       return res.status(404).json({message:"oredr not found"});
+    }
+
+    const {status}=req.body;
+    if(!["SHIPPED","DELIVERED"].includes(status)){
+        return res.status(404).json({message:"invalid status"});
+    }
+    order.status=status;
+    if (status=="SHIPPED"){
+      order.shippedAt=Date.now();
+    }
+
+    if (status=="DELIVERED"){
+        order.deliveredAt=Date.now();
+    }
+    const updateOrder=await order.save();
+    res.json(updateOrder);
+
+};

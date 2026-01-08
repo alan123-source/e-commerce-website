@@ -29,7 +29,14 @@ const orderSchema=new mongoose.Schema(
     },
     status:{
         type:String,
+        enum:["PLACED","SHIPPED","DELIVERED"],
         default:"PLACED"
+    },
+    shippedAt:{
+        type:Date
+    },
+    deliveredAt:{
+        type:Date
     }
  },
 {timestamps:true}

@@ -3,6 +3,7 @@ import userRoutes from "./routes/userRoutes.js";
 import { protect } from './middleware/authmiddleware.js';
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 
 const app=express();
 //built in miidlewares
@@ -23,5 +24,5 @@ app.get("/api/protected",protect,(req,res)=>{
 app.use("/api/users",userRoutes);
 app.use("/api/products",productRoutes);
 app.use("/api/orders",orderRoutes);
-
+app.use("/api/payments",paymentRoutes);
 export default app;
