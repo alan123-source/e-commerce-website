@@ -4,7 +4,7 @@ import Order from "../models/orderModel.js";
 export const createOrder=async(req,res)=>{
     const {orderItems,totalPrice}=req.body;
     if(!orderItems||orderItems.length==0){
-        return res.stats(400).json({message:"No order items"});
+        return res.status(400).json({message:"No order items"});
     }
 
     const order=await Order.create({
@@ -52,5 +52,26 @@ export const updateOrderStatus=async(req,res)=>{
     }
     const updateOrder=await order.save();
     res.json(updateOrder);
+
+};
+
+export const markOrderPaid=async(req,res)=>{
+    const {orderId,paymentIntentId}=req.body;
+    
+    if (!orderId||!paymentIntentId){
+      return res.status(400).json({message:"Order ID and payment ID required"});   
+    }
+    const order=await Order.findById(orderId);
+    if(!order){
+      return res.status(404).json({message:"order not found"});
+
+    }
+    order.isPaid=true;
+    order.paidAt=Date.now();
+    order.paymentIntentId=paymentIntentId;
+
+    const updateOrder=await order.save();
+    res.json(updateOrder);
+
 
 };

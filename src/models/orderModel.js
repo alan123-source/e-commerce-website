@@ -9,7 +9,7 @@ const orderSchema=new mongoose.Schema(
     orderItems:[
         {
         product:{
-            type:mongoose.Schema.Types.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,//references to other schema 
             ref:"Product",
             required:true
         },
@@ -27,6 +27,18 @@ const orderSchema=new mongoose.Schema(
         type:Number,
         required:true
     },
+    //payment
+    isPaid:{
+       type:Boolean,
+       default:false
+    },
+    paidAt:{
+       type:Date
+    },
+    paymentIntentId:{
+         type:String
+    },
+    //order status
     status:{
         type:String,
         enum:["PLACED","SHIPPED","DELIVERED"],
