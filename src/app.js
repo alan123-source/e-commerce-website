@@ -4,6 +4,7 @@ import { protect } from './middleware/authmiddleware.js';
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 const app=express();
 //built in miidlewares
@@ -25,4 +26,5 @@ app.use("/api/users",userRoutes);
 app.use("/api/products",productRoutes);
 app.use("/api/orders",orderRoutes);
 app.use("/api/payments",paymentRoutes);
+app.use("/api/cart",cartRoutes);
 export default app;
