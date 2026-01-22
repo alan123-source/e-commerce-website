@@ -16,10 +16,25 @@ export const  CreateProduct=async(req,res)=>{
 };
 
 //Get all products//
+//pagination used//
 
 export const getProducts=async(req,res) =>{
-    const products=await Product.find();
-    res.json(products);
+    const page=Number(req.query.page)||1;
+    const limit=Number(req.query.limit)||5;
+    const keyword=req.query.keyword
+      ?{
+        name:{$regex:req.query.keyword,$option:"i"}
+      }:{};
+      const count=await Product.countDocuments({...keyword});
+      const products=await Product.find({...keyword})
+      .limit(limit)
+      .skip(limit*(page-1));
+      res.json({
+        products,
+        page,
+        pages:Math.ceil(count/limit)
+      });
+
 };
 
 //Get single Product//
