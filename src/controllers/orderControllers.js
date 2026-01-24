@@ -1,4 +1,6 @@
 import Order from "../models/orderModel.js";
+import Cart from "../models/cartModel.js";
+import Product from "../models/productModel.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
@@ -75,3 +77,39 @@ export const markOrderPaid=async(req,res)=>{
 
 
 };
+
+export const createOrderFromCart=async(req,res)=>{
+   const cart=await Cart.findOne({user:req.user._id}).populate(
+    "items.product",
+    "price"
+   );
+
+   if(!cart||cart.items.length===0)
+     {
+        return res.status(400).json({message:"Cart is empty"});
+     }
+
+     let orderItems=[];
+     let totalPrice=0;
+     for (const item of cart.items){
+        const price=item.product.price;
+        totalPrice+=price*item.qty;
+        orderItems.push({
+            product:item.product._id,
+            qty:item.qty,
+            price
+        });
+     }
+
+     const order=await Order.create({
+        user:req.user._id,
+        orderItems,
+        totalPrice,
+        status:"PLACED"
+     });
+
+     //clear cart//
+     cart.items=[];
+     await cart.save();
+     res.status(201).json(order);
+}; 
