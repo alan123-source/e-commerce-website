@@ -91,13 +91,24 @@ export const createOrderFromCart=async(req,res)=>{
 
      let orderItems=[];
      let totalPrice=0;
+
+     //stock check//
      for (const item of cart.items){
-        const price=item.product.price;
-        totalPrice+=price*item.qty;
+      if(item.qty>item.product.stock){
+        return res.status(400).json({message:`insufficient stock for ${item.product._id}`});
+      }
+
+     }
+      //create order items and reduce stock//
+     for (const item of cart.items){
+        const product=await Product.findById(item.product._id);
+        product.stock-=item.qty;
+        await product.save();
+        totalPrice+=product.price*item.qty;
         orderItems.push({
             product:item.product._id,
             qty:item.qty,
-            price
+            price:product.price
         });
      }
 
