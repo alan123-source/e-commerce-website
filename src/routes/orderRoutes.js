@@ -5,7 +5,8 @@ import {
     getAllOrders,
     updateOrderStatus,
     markOrderPaid,
-    createOrderFromCart
+    createOrderFromCart,
+    cancelOrder
 } from "../controllers/orderControllers.js";
 import { protect,admin } from "../middleware/authmiddleware.js";
 
@@ -16,6 +17,7 @@ router.post("/",protect,createOrder);
 router.get("/myorders",protect,getMyOrders);
 router.put("/pay",protect,markOrderPaid);
 router.post("/checkout",protect,createOrderFromCart);
+router.put("/:id/cancel",protect,cancelOrder);
 
 //admin//
 router.get("/",protect,admin,getAllOrders);

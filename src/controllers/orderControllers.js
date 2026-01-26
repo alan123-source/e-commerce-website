@@ -124,3 +124,32 @@ export const createOrderFromCart=async(req,res)=>{
      await cart.save();
      res.status(201).json(order);
 }; 
+
+export const cancelOrder=async(req,res)=>{
+    const order=await Order.findById(req.params.id);
+    if(!order){
+    
+        return res.status(404).json({message:"Order not found"});
+    }
+
+    if(order.status==="DELIVERED"){
+        return res.status(400).json({message:"Delivered order cannot be cancelled"});
+
+    }
+    if(order.status==="CANCELLED"){
+        return res.status(400).json({message:"Order already cancelled"});
+
+    }
+    //restore stock//
+    for(const item of order.orderItems){
+        const product=await Product.findById(item.product);
+        product.stock+=item.qty;
+        await product.save();
+    
+    }
+    order.status="CANCELLED";
+    order.cancelledAt=Date.now();
+    await order.save();
+    res.json({message:"order cancelled and stock restored"});
+
+};

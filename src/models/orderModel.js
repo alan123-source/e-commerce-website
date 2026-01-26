@@ -41,8 +41,11 @@ const orderSchema=new mongoose.Schema(
     //order status
     status:{
         type:String,
-        enum:["PLACED","SHIPPED","DELIVERED"],
+        enum:["PLACED","PAID","SHIPPED","DELIVERED","CANCELLED"],
         default:"PLACED"
+    },
+    cancelledAt:{
+       type:Date
     },
     shippedAt:{
         type:Date
