@@ -52,6 +52,13 @@ const orderSchema=new mongoose.Schema(
     },
     deliveredAt:{
         type:Date
+    },
+    isRefunded:{
+        type:Boolean,
+        default:false
+    },
+    refundedAt:{
+        type:Date
     }
  },
 {timestamps:true}
