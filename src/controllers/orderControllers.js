@@ -69,6 +69,11 @@ export const markOrderPaid=async(req,res)=>{
 
     }
     order.isPaid=true;
+    for (const item of order.orderItems){
+        const product=await Product.findById(item.product);
+        product.soldCount+=item.qty;
+        await product.save();
+    }
     order.paidAt=Date.now();
     order.paymentIntentId=paymentIntentId;
 
