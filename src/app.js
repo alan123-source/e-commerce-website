@@ -1,4 +1,8 @@
 import express from 'express';
+import helmet from "helmet";
+import rateLimit from 'express-rate-limit';
+
+//Routes
 import userRoutes from "./routes/userRoutes.js";
 import { protect } from './middleware/authmiddleware.js';
 import productRoutes from "./routes/productRoutes.js";
@@ -9,8 +13,24 @@ import adminRoutes from "./routes/adminRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 
 const app=express();
+//security http//
+app.use(helmet());
+
+
+
 //built in miidlewares
-app.use(express.json());
+app.use(express.json({limit:"10kb"}));
+
+//prevent mongoDB injection//
+
+
+const limiter=rateLimit({
+  windowMs:15*60*1000,
+  max:100,
+  message:"to many request from this ip,please try again later"
+});
+app.use(limiter);
+
 //health routes
 app.get('/',(req,res)=>{
   res.send("ecommerce api is running");
@@ -31,4 +51,10 @@ app.use("/api/orders",orderRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/recommendations",recommendationRoutes);
+
+app.use((req,res)=>{
+  res.status(404).json({
+    message:"Route not found"
+  });
+});
 export default app;
