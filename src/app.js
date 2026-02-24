@@ -1,6 +1,8 @@
 import express from 'express';
 import helmet from "helmet";
 import rateLimit from 'express-rate-limit';
+import errorHandler from './middleware/errorMiddleware.js';
+import morgan from "morgan";
 
 //Routes
 import userRoutes from "./routes/userRoutes.js";
@@ -13,6 +15,9 @@ import adminRoutes from "./routes/adminRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 
 const app=express();
+if (process.env.NODE_ENV!="production"){
+  app.use(morgan("dev"));
+}
 //security http//
 app.use(helmet());
 
@@ -51,11 +56,16 @@ app.use("/api/orders",orderRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/recommendations",recommendationRoutes);
+app.use(errorHandler);
 
-app.use((req,res)=>{
-  res.status(404).json({
-    message:"Route not found"
-  });
-});
+//app.use((req,res)=>{
+  //res.status(404).json({
+   // message:"Route not found"
+  //});
+//});
+/* dummy routes app.get("/api/error-test",(req,res)=>{
+  throw new Error("this is a test error");
+});*/
+app.use(errorHandler);
 export default app;
  
