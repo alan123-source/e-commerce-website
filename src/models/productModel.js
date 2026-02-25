@@ -3,7 +3,8 @@ const productSchema=new mongoose.Schema(
     {
             name:{
         type:String,
-        required:true
+        required:true,
+        index:true
        },
       price:{
         type:Number,
@@ -19,12 +20,19 @@ const productSchema=new mongoose.Schema(
       soldCount:{
         type:Number,
         default:0
-      }
+      },
+      tags:[
+        {
+          type:String,
+          index:true
+        }
+      ]
       
        
     },
       {timestamps:true}
 );
 
+productSchema.index({price:1,soldCount:-1});
 const Product=mongoose.model("Product",productSchema);
 export default Product;
