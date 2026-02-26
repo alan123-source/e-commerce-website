@@ -27,5 +27,43 @@ describe("User API",()=>{
     expect(res.body).toHaveProperty("_id");
     expect(res.body).toHaveProperty("email","alan@example.com");
  });
+
+ test("should login successfully",async()=>{
+    //first register user
+    await request(app)
+    .post("/api/users/register")
+    .send({
+        name:"Alan",
+        email:"alan2@example.com",
+        password:"123456"
+    });
+    //login now//
+    const res=await request(app)
+    .post("/api/users/login").send({
+        email:"alan2@example.com",
+        password:"123456"
+
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("token");
+ });
+ test("should fail login with wrong password",async()=>{
+    await request(app)
+    .post("/api/users/register")
+    .send({
+        name:"Alan",
+        email:"alan3@example.com",
+        password:"123456"
+    });
+
+    const res=await request(app).post("/api/users/login"
+     ).send({
+            email:"alan3@example.com",
+            password:"wrongpass"
+        });
+        expect(res.statusCode).toBe(401);
+    
+ });
 });
 
