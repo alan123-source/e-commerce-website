@@ -65,5 +65,24 @@ describe("User API",()=>{
         expect(res.statusCode).toBe(401);
     
  });
+
+ test("should deny acces to protected route without token",async()=>{
+    const res=await request(app).get("/api/protected");
+    expect(res.statusCode).toBe(401);
+ });
+ test("should allow access to protected routes with valid token",async()=>{
+    const registerRes=await request(app)
+    .post("/api/users/register")
+    .send({
+        name:"Proteccted User",
+        email:"protected@example.com",
+        password:"123456"
+    });
+    const token=registerRes.body.token;
+    const res=await request(app)
+    .get("/api/protected").set("Authorization",`Bearer ${token}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveProperty("message","you are authorized");
+ });
 });
 
