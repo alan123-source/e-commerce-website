@@ -22,5 +22,32 @@ describe("admin authorization",()=>{
             stock:10
         });
         expect(res.statusCode).toBe(403);
-    })
+    });
+
+    test("admin should get all orders",async()=>{
+        const adminRes=await request(app)
+        .post("/api/users/register")
+        .send({
+            name:"Admin user",
+            email:"adminorder@example.com",
+            password:"123456"
+        });
+        const User=(await import("../src/models/usermodel.js")).default;
+        await User.findOneAndUpdate({
+            email:"adminorder@example.com"
+        },{
+            role:"admin"
+        });
+        const adminLogin=await request(app)
+        .post("/api/users/login")
+        .send({
+            email:"adminorder@example.com",
+            password:"123456"
+        });
+        const adminToken=adminLogin.body.token;
+        const res=await request(app)
+        .get("/api/orders")
+        .set("Authorization",`Bearer ${adminToken}`);
+        expect(res.statusCode).toBe(200);
+    });
 });
