@@ -32,7 +32,7 @@ describe("admin authorization",()=>{
             email:"adminorder@example.com",
             password:"123456"
         });
-        const User=(await import("../src/models/usermodel.js")).default;
+        const User=(await import("../src/models/userModel.js")).default;
         await User.findOneAndUpdate({
             email:"adminorder@example.com"
         },{

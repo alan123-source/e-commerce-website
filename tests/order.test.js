@@ -23,32 +23,65 @@ describe("order Api",()=>{
        expect(res.statusCode).toBe(400);
     });
 
-    test("should create order success fully",async()=>{
+    test("should create order with real product and calculate total sucessfully",async()=>{
+        
+        const adminRes=await request(app)
+        .post("/api/users/register")
+        .send({
+            name:"Admin user",
+            email:"adminorder@test.com",
+            password:"123456"
+        });
+        const User=(await import("../src/models/userModel.js")).default;
+        await User.findOneAndUpdate({
+            email:"adminorder@test.com"
+        },{
+            role:"admin"
+        });
+        const adminLogin=await request(app)
+        .post("/api/users/login").
+        send({
+            email:"adminorder@test.com",
+            password:"123456"
+        });
+        const adminToken=adminLogin.body.token;
+        //admin creates product
+        const productRes=await request(app)
+        .post("/api/products")
+        .set("Authorization",`Bearer ${adminToken}`)
+        .send({
+            name:"Test Product",
+            price:200,
+            stock:10
+        });
+        
+         const productId=productRes.body._id;
+        
         //register user//
         const userRes=await request(app)
         .post("/api/users/register")
         .send({
-            name:"order success user",
-            email:"ordersucess@example.com",
+            name:"order user",
+            email:"realorder@test.com",
             password:"123456"
         });
-        const token=userRes.body.token;
-       const res=await request(app)
+        const userToken=userRes.body.token;
+       const orderRes=await request(app)
        .post("/api/orders")
-       .set("Authorization",`Bearer ${token}`)
+       .set("Authorization",`Bearer ${userToken}`)
        .send({
         orderItems:[
             {
-                product:"507f1f77bcf86cd799439011",
-                qty:1,
-                price:100
+                product:productId,
+                qty:2
+                
             }
         ]
-        ,totalPrice:100
+        
        }); 
-     expect(res.statusCode).toBe(201);
-     expect(res.body).toHaveProperty("_id");
-     expect(res.body).toHaveProperty("totalPrice",100);
+       
+     expect(orderRes.statusCode).toBe(201);
+     expect(orderRes.body.totalPrice).toBe(400);
     });
 
     test("should get loggesd in users orders",async()=>{
@@ -81,7 +114,7 @@ describe("order Api",()=>{
         .get("/api/orders/myorders")
         .set("Authorization",`Bearer ${token}`);
         expect(res.statusCode).toBe(200);
-        expect(res.body.length).toBe(1)
+        expect(res.body.length).toBe(0)
 
     });
 

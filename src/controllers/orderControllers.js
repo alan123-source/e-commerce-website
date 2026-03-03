@@ -4,14 +4,40 @@ import Product from "../models/productModel.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
-    const {orderItems,totalPrice}=req.body;
-    if(!orderItems||orderItems.length==0){
+    const {orderItems}=req.body;
+    if(!orderItems||orderItems.length===0){
         return res.status(400).json({message:"No order items"});
     }
+    let totalPrice=0;
+    const processedItems=[];
+    for (const item of orderItems){
+        const product=await Product.findById(item.product);
+        if(!product){
+            return res.status(404).json({
+                message:"Product not found"
+            });
+        }
 
+        if(product.stock<item.qty){
+            return res.status(400).json({
+           
+                message:"insufficient stock"
+            });
+        }
+        const itemTotal=product.price*item.qty;
+        totalPrice+=itemTotal;
+        processedItems.push({
+            product:product._id,
+            qty:item.qty,
+            price:product.price
+        });
+        product.stock-=item.qty;
+        product.soldCount+=item.qty;
+        await product.save();
+    }
     const order=await Order.create({
         user:req.user._id,
-        orderItems,
+        orderItems:processedItems,
         totalPrice
   });
   res.status(201).json(order);

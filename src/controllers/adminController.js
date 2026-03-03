@@ -1,5 +1,5 @@
 import Order from "../models/orderModel.js";
-import User from "../models/usermodel.js";
+import User from "../models/userModel.js";
 
 export const getDashboardStats=async(req,res)=>{
     const totalOrders=await Order.countDocuments();
