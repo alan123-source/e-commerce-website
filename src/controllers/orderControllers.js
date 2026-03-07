@@ -1,11 +1,19 @@
+import mongoose from "mongoose";
 import Order from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
 import Product from "../models/productModel.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
+    const session=await mongoose.startSession();
+    session.startTransaction();
+
+    try{
+    
     const {orderItems}=req.body;
     if(!orderItems||orderItems.length===0){
+        await session.abortTransaction();
+        session.endSession();
         return res.status(400).json({message:"No order items"});
     }
     let totalPrice=0;
@@ -13,12 +21,16 @@ export const createOrder=async(req,res)=>{
     for (const item of orderItems){
         const product=await Product.findById(item.product);
         if(!product){
+            await session.abortTransaction();
+            session.endSession();
             return res.status(404).json({
                 message:"Product not found"
             });
         }
 
         if(product.stock<item.qty){
+            await session.abortTransaction();
+            session.endSession();
             return res.status(400).json({
            
                 message:"insufficient stock"
@@ -33,14 +45,31 @@ export const createOrder=async(req,res)=>{
         });
         product.stock-=item.qty;
         product.soldCount+=item.qty;
-        await product.save();
+        await product.save({session});
     }
-    const order=await Order.create({
+
+    const order=await Order.create(
+    [
+        {
         user:req.user._id,
         orderItems:processedItems,
         totalPrice
-  });
-  res.status(201).json(order);
+  }
+],{session});
+
+  await session.commitTransaction();
+  session.endSession();
+  res.status(201).json(order[0]);
+} catch(error){
+     await session.abortTransaction();
+     session.endSession();
+
+     console.log("Transactoion error",error);
+     res.status(500).json({
+        message:"server error while creating order"
+     });
+
+    }
 };
 
 //get user orders//
