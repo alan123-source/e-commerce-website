@@ -13,6 +13,8 @@ import orderRoutes from "./routes/orderRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from './config/swagger.js';
 
 const app=express();
 if (process.env.NODE_ENV!="production"){
@@ -35,7 +37,7 @@ const limiter=rateLimit({
   message:"to many request from this ip,please try again later"
 });
 app.use(limiter);
-
+app.use("/api/docs",swaggerUi.serve,swaggerUi.setup(swaggerSpec));
 //health routes
 app.get('/',(req,res)=>{
   res.send("ecommerce api is running");
