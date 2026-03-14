@@ -21,28 +21,35 @@ const router=express.Router();
  *             schema:
  *               type: array
  *               items:
- *                 type: object
- *                 properties:
- *                   _id:
- *                     type: string
- *                     example: 65a123456789abcdef123456
- *                   name:
- *                     type: string
- *                     example: Laptop
- *                   price:
- *                     type: number
- *                     example: 45000
- *                   description:
- *                     type: string
- *                     example: High performance laptop
- *                   stock:
- *                     type: number
- *                     example: 20
+ *                 $ref:'#/components/schemas/Product'
  */
 router.get("/",getProducts);
 router.get("/:id",getProductById);
 
 //protected route admin only//
+
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product (Admin only)
+ *     tags: [Products]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Product'
+ *     responses:
+ *       201:
+ *         description: Product created successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Admin access required
+ */
 router.post("/",protect,admin,
     [
         body("name").notEmpty().withMessage("product name required"),

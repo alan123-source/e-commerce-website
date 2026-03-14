@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Order from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
 import Product from "../models/productModel.js";
+import { successResponse } from "../utils/apiResponse.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
@@ -59,6 +60,7 @@ export const createOrder=async(req,res)=>{
 
   await session.commitTransaction();
   session.endSession();
+  
   res.status(201).json(order[0]);
 } catch(error){
      await session.abortTransaction();
@@ -76,6 +78,7 @@ export const createOrder=async(req,res)=>{
 
 export const getMyOrders=async(req,res)=>{
    const orders=await Order.find({user:req.user._id});
+  successResponse(res,orders,201);
    res.json(orders)
 };
 

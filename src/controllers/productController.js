@@ -1,4 +1,5 @@
 import Product from "../models/productModel.js";
+import { successResponse } from "../utils/apiResponse.js";
 
 //CREATE PRODUCT//
 export const  CreateProduct=async(req,res)=>{
@@ -11,7 +12,7 @@ export const  CreateProduct=async(req,res)=>{
     const product =await Product.create({
         name,price,description,stock
     });
-
+    successResponse(res,product,201);
     res.status(201).json(product);
 };
 
