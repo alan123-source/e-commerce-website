@@ -7,6 +7,38 @@ import { protect,admin} from "../middleware/authmiddleware.js";
 const router=express.Router();
 
 //public routes//
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Get all products
+ *     tags: [Products]
+ *     responses:
+ *       200:
+ *         description: List of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                     example: 65a123456789abcdef123456
+ *                   name:
+ *                     type: string
+ *                     example: Laptop
+ *                   price:
+ *                     type: number
+ *                     example: 45000
+ *                   description:
+ *                     type: string
+ *                     example: High performance laptop
+ *                   stock:
+ *                     type: number
+ *                     example: 20
+ */
 router.get("/",getProducts);
 router.get("/:id",getProductById);
 

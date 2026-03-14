@@ -1,3 +1,4 @@
+import { Schema } from "mongoose";
 import swaggerJSDoc from "swagger-jsdoc";
 
 const options={
@@ -12,6 +13,20 @@ const options={
             {
                 url:"http://localhost:5000"
             }
+        ],
+        components:{
+            securitySchemes:{
+                bearerAuth:{
+                    type:"http",
+                    scheme:"bearer",
+                    bearerFormat:"JWT"
+                }
+            }
+        },
+       security:[
+           {
+            bearerAuth:[]
+          } 
         ]
     },
     apis:["./src/routes/*.js"]
