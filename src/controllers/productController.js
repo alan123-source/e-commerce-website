@@ -20,22 +20,25 @@ export const  CreateProduct=async(req,res)=>{
 //pagination used//
 
 export const getProducts=async(req,res) =>{
-    const page=Number(req.query.page)||1;
-    const limit=Number(req.query.limit)||5;
-    const keyword=req.query.keyword
-      ?{
-        name:{$regex:req.query.keyword,$option:"i"}
-      }:{};
-      const count=await Product.countDocuments({...keyword});
-      const products=await Product.find({...keyword})
-      .limit(limit)
-      .skip(limit*(page-1));
-      res.json({
-        products,
-        page,
-        pages:Math.ceil(count/limit)
-      });
-
+    const {search,page=1,limit=10}=req.query;
+    //build search query//
+    const query={};
+    if(search){
+        query.name={$regex:search,$option:"i"};
+    }
+    const skip=(page-1)*limit;
+    const products=await Product.find(query).skip(skip)
+    .limit(Number(limit));
+    const total=await Product.countDocuments(query);
+    res.json({
+        success:true,
+        data:products,
+        pagination:{
+            total,
+            page:Number(page),
+            pages:Math.ceil(total/limit)
+        }
+    });
 };
 
 //Get single Product//

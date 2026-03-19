@@ -7,21 +7,35 @@ import { protect,admin} from "../middleware/authmiddleware.js";
 const router=express.Router();
 
 //public routes//
+
 /**
  * @swagger
  * /api/products:
  *   get:
- *     summary: Get all products
+ *     summary: Get products with search and pagination
  *     tags: [Products]
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search products by name
+ *         example: laptop
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: number
+ *         description: Page number
+ *         example: 1
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: number
+ *         description: Number of products per page
+ *         example: 5
  *     responses:
  *       200:
- *         description: List of products
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref:'#/components/schemas/Product'
+ *         description: Products fetched successfully
  */
 router.get("/",getProducts);
 router.get("/:id",getProductById);
