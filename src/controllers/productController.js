@@ -20,11 +20,11 @@ export const  CreateProduct=async(req,res)=>{
 //pagination used//
 
 export const getProducts=async(req,res) =>{
-    const {search,page=1,limit=10}=req.query;
+    const {keyword,page=1,limit=10}=req.query;
     //build search query//
     const query={};
-    if(search){
-        query.name={$regex:search,$option:"i"};
+    if(keyword){
+        query.name={$regex:keyword,$options:"i"};
     }
     const skip=(page-1)*limit;
     const products=await Product.find(query).skip(skip)

@@ -3,6 +3,7 @@ import helmet from "helmet";
 import rateLimit from 'express-rate-limit';
 import errorHandler from './middleware/errorMiddleware.js';
 import morgan from "morgan";
+import cors from "cors"
 
 //Routes
 import userRoutes from "./routes/userRoutes.js";
@@ -20,6 +21,7 @@ const app=express();
 if (process.env.NODE_ENV!="production"){
   app.use(morgan("dev"));
 }
+app.use(cors());
 //security http//
 app.use(helmet());
 
