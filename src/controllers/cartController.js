@@ -2,7 +2,7 @@ import Cart from "../models/cartModel.js";
 
 //get cart//
 export const getCart=async(req,res)=>{
-    let cart=await Cart.findOne({user:req.user._id}).populate("items.product","name price");
+    let cart=await Cart.findOne({user:req.user._id}).populate("items.product","name price image");
     if (!cart){
         cart=await Cart.create({user:req.user._id,items:[]});
     }
