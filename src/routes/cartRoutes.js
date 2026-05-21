@@ -23,7 +23,7 @@ router.get("/",protect,getCart);
 
 /**
  * @swagger
- * /api/cart:
+ * /api/cart/add:
  *   post:
  *     summary: Add item to cart
  *     tags: [Cart]

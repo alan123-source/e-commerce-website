@@ -10,6 +10,12 @@ const productSchema=new mongoose.Schema(
         type:Number,
         required:true
        },
+
+       image:{
+        type:String,
+        default:"https://via.placeholder.com/200"
+       },
+       
       description:{
         type:String
       },
