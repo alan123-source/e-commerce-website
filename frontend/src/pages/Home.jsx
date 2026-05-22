@@ -53,6 +53,9 @@ function Home(){
       );
       console.log("cart updated:",res.data);
       alert("product added to cart");
+      const currentCount=Number(localStorage.getItem("cartCount"))||0;
+      localStorage.setItem("cartCount",currentCount+1);
+      window.dispatchEvent(new Event("storage"));
 
     }catch(error){
       console.log(error);

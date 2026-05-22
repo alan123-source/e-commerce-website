@@ -16,6 +16,7 @@ function Cart(){
                 );
                 console.log(res.data);
                 setCart(res.data);
+                localStorage.setItem("cartCount",res.data.items.length);
 
             }catch(error){
                 console.log(error);
@@ -36,10 +37,13 @@ function Cart(){
 
             });
             setCart((prev)=>({
+               
                 ...prev,
                 items:prev.items.filter(
                     (item)=>item.product._id!==productId)
             }));
+             localStorage.setItem("cartCount",cart.items.length-1);
+             window.dispatchEvent(new Event("storage"));
 
         }catch(error){
              console.log(error)
