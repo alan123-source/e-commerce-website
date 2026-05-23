@@ -3,6 +3,14 @@ import {useEffect,useState} from "react";
 
 function Navbar(){
     const [cartCount,setCartCount]=useState(0);
+    const token=localStorage.getItem("token");
+    const handleLogout=()=>{
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("cartCount");
+      window.location.href="/login";
+
+    };
     useEffect(() => {
   const updateCartCount = () => {
     const count = localStorage.getItem("cartCount");
@@ -55,9 +63,9 @@ function Navbar(){
               to="/"
               style={{
                 textDecoration:"none",
-                color:"#333",
+                color:"#444",
                 fontSize:"16px",
-                fontWeight:"500"
+                fontWeight:"600"
               }}
             >
                 Home
@@ -66,12 +74,12 @@ function Navbar(){
               <Link 
               to="/cart"
               style={{
-                backgroundColor:"#222",
+                backgroundColor:"#111",
                 color:"white",
                 textDecoration:"none",
-                borderRadius:"8px",
+                borderRadius:"12px",
                 fontSize:"15px",
-                fontWeight:"500",
+                fontWeight:"600",
                 padding:"10px 18px",
                 position:"relative",
               }}
@@ -96,7 +104,57 @@ function Navbar(){
              >
                 {cartCount}
              </span>
-            </Link>  
+            </Link> 
+            {
+              !token ?(
+               <>
+                 <Link
+                   to="/login"
+                   style={{
+                    textDecoration:"none",
+                    color:"#333",
+                    fontWeight:"600",
+                    fontSize:"15px"
+                   }}
+                 >
+                  Login
+                 </Link>
+
+                 <Link
+                   to="/register"
+                   style={{
+                    textDecoration:"none",
+                    background:
+                    "linear-gradient(to right, #ff9966, #ff5e62)",
+                    color:"white",
+                    padding:"12px 20px",
+                    borderRadius:"12px",
+                    fontWeight:"600",
+                    boxShadow:"0 4px 10px rgba(255,94,98,0.3)"
+                   }}
+                 >
+                   Register
+                 </Link>
+               </>
+
+              ):(
+                <button
+                 onClick={handleLogout}
+                 style={{
+                  backgroundColor:"#ff4d4f",
+                  color:"white",
+                  border:"none",
+                  padding:"12px 20px",
+                  borderRadius:"12px",
+                  cursor:"pointer",
+                  fontWeight:"600",
+                  boxShadow:"0 4px 10px rgba(255,77,79,0.3)"
+                 }}
+                >
+                  Logout
+                </button>
+              )
+            } 
 
           </div>
            
