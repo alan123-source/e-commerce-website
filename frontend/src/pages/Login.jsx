@@ -2,6 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useState} from "react";
 import API from "../api/axios";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 
 function Login(){
@@ -23,13 +24,25 @@ function Login(){
 
             //save token//
             localStorage.setItem("token",res.data.token);
-            alert("login successfull");
+            toast.success(" ✅Login Successfull",{
+                style:{
+                   backgroundColor:"linear-gradient(to right, #4facfe, #00f2fe)",
+                   color:"white"
+                }
+            });
+            //alert("login successfull");
             navigate("/");
 
         }catch(error){
             
             console.log(error);
-            alert("invalid credentials");
+            toast.success("❌ Invalid credentials",{
+                style:{
+                    backgroundColor:"#ff4d4f",
+                    color:"white"
+                }
+            })
+            //alert("invalid credentials");
 
         }
     };

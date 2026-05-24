@@ -1,5 +1,7 @@
 import { useEffect,useState } from "react";
 import API from "../api/axios";
+import {Link} from "react-router-dom";
+import {handleAddToCart} from "../utils/cart.js";
 
 function Home(){
     const [products,setProducts]=useState([]);
@@ -34,34 +36,7 @@ function Home(){
 
 }, [debouncedSearch]);
 
-  const handleAddToCart=async(productId)=>{
-
-    try{
-      
-      const token=localStorage.getItem("token");
-      const res=await API.post(
-        "/cart/add",
-        {
-          productId,
-          qty:1
-        },
-        {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        }
-      );
-      console.log("cart updated:",res.data);
-      alert("product added to cart");
-      const currentCount=Number(localStorage.getItem("cartCount"))||0;
-      localStorage.setItem("cartCount",currentCount+1);
-      window.dispatchEvent(new Event("storage"));
-
-    }catch(error){
-      console.log(error);
-      alert("please login first");
-    }
-  };
+ 
    
 
    return (
@@ -101,7 +76,16 @@ function Home(){
       
       <div style={{ display: "flex", flexWrap: "wrap", gap: "25px" }}>
   {products.map((p) => (
-    <div
+    <Link
+    key={p._id}
+    to={`/products/${p._id}`}
+      style={{
+        textDecoration:"none",
+        color:"inherit"
+      }}
+    >
+    
+   <div
       key={p._id}
       style={{
          backgroundColor: "white",
@@ -146,8 +130,10 @@ function Home(){
         Add to Cart
       </button>
     </div>
+  </Link>
   ))}
 </div>
+ 
        
       ) : (
         <p>No products found</p>

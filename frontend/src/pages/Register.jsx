@@ -2,6 +2,7 @@ import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import API from "../api/axios";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 function Register(){
     const navigate=useNavigate();
@@ -23,13 +24,26 @@ function Register(){
 
             console.log(res.data);
             localStorage.setItem("token",res.data.token);
-            alert("registration successful");
+            
+            toast.success("Registration Successfull",{
+              style:{
+                backgroud:"linear-gradient(to right, #ff9966, #ff5e62)",
+                color:"white"
+              }
+            })
+            //alert("registration successful");
             navigate("/");
 
         }catch(error){
 
            console.log(error.response.data);
-           alert("registration failed");
+           toast.success("❌ Invalid credentials",{
+            style:{
+              backgroundColor:"#ff4d4f",
+              color:"white"
+            }
+           });
+           //alert("registration failed");
         }
 
     };
