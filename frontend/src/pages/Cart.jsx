@@ -1,8 +1,10 @@
 import {useEffect,useState} from "react";
 import API from "../api/axios";
+import {useNavigate} from "react-router-dom";
 
 function Cart(){
     const [cart,setCart]=useState(null);
+    const navigate=useNavigate();
     useEffect(()=>{
         const fetchCart=async()=>{
             try{
@@ -50,9 +52,33 @@ function Cart(){
         }
     };
 
+    const updateQty=async(productId,newQty)=>{
+
+        try{
+            if(newQty<1) return;
+            const token=localStorage.getItem("token");
+            const res=await API.put(`/cart/${productId}`,
+                {
+                    qty:newQty
+                },
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+            setCart(res.data);
+        }catch(error){
+          console.log(error);
+        }
+    };
+
     const totalPrice=cart?.items?.reduce(
         (acc,item)=>acc+item.product.price*item.qty,0
     );
+
+    const shipping=totalPrice<1000? 0:100;
+    const grandTotal=totalPrice+shipping;
 
     return (
        <div style={{
@@ -89,7 +115,7 @@ function Cart(){
                           style={{
                             width:"120px",
                             height:"100px",
-                            obectFit:"cover",
+                            objectFit:"cover",
                             borderRadius:"10px"
                           }}
                         />
@@ -100,9 +126,65 @@ function Cart(){
                         <p style={{fontWeight:"bold",marginBottom:"5px"}}>
                             ₹{item.product.price}
                         </p>
-                        <p style={{color:"#555"}}>
-                            Qty:{item.qty}
-                        </p>
+                        <div 
+                           style={{
+                            display:"flex",
+                            alignItems:"center",
+                            gap:"15px",
+                            marginTop:"10px"
+                           }}
+                        >
+                            <button
+                               onClick={()=>
+                                updateQty(
+                                    
+                                    item.product._id,
+                                    item.qty-1
+
+                                )}
+                                style={{
+                                    width:"35px",
+                                    height:"35px",
+                                    border:"none",
+                                    borderRadius:"8px",
+                                    cursor:"pointer",
+                                    fontSize:"18px",
+                                    backgroundColor:"#ddd"
+                                }}
+                            >
+                                -
+                            </button>
+
+                            <span
+                              style={{
+                                fontWeight:"bold",
+                                fontSize:"18px"
+                              }}
+                            >
+                                {item.qty}
+                            </span>
+
+                            <button
+                              onClick={()=>
+                                updateQty(
+                                    item.product._id,
+                                    item.qty+1
+                                )
+                              }
+                              style={{
+                                width:"35px",
+                                height:"35px",
+                                border:"none",
+                                borderRadius:"8px",
+                                cursor:"pointer",
+                                fontSize:"18px",
+                                backgroundColor:"#111",
+                                color:"white"
+                              }}
+                            >+</button>
+                        </div>
+
+
                        </div>
                        <button onClick={
                         ()=>handleRemove(item.product._id)
@@ -136,27 +218,79 @@ function Cart(){
              marginTop:"30px"
           }}
         >
-            <h2 style={{marginBottom:"15px"}}>Cart Summary</h2>
-            <p style={{marginBottom:"10px"}}>
-                Total Items:{cart?.items?.length}
-            </p>
-            <h3 style={{marginBottom:"20px"}}>
-                Total Price:₹{totalPrice}
-            </h3>
-            <button
+            <h2
               style={{
-                backgroundColor:"#222",
+                marginBottom:"20px",
+                color:"#222"
+              }}
+            >Cart Summary</h2>
+            <div
+              style={{
+                display:"flex",
+                justifyContent:"space-between",
+                marginBottom:"12px"
+              }}
+            >
+
+            <span>Items</span>
+            <span>{cart?.items?.length}</span>
+                
+            </div>
+
+            <div
+              style={{
+                display:"flex",
+                justifyContent:"space-between",
+                marginBottom:"12px"
+              }}
+            >
+                <span>Subtotal</span>
+                <span>₹{totalPrice}</span>
+            </div>
+
+            <div
+               style={{
+                display:"flex",
+                justifyContent:"space-between",
+                marginBottom:"20px"
+               }}
+            >
+                <span>Shipping </span>
+                <span>
+                    {shipping===0? " FREE":`₹${shipping}`}
+                </span>
+            </div>
+            <hr style={{marginBottom:"20px"}}/>
+
+            <div
+              style={{
+                display:"flex",
+                justifyContent:"space-between",
+                marginBottom:"25px",
+                fontWeight:"bold",
+                fontSize:"20px"
+              }}
+            >
+                <span>Total</span>
+                <span>₹{grandTotal}</span>
+            </div>
+            <button
+              onClick={()=>navigate("/checkout")}
+              style={{
+                background:"#222",
                 color:"white",
-                padding:"12px",
+                padding:"14px",
                 border:"none",
-                borderRadius:"8px",
+                borderRadius:"10px",
                 width:"100%",
                 cursor:"pointer",
-                fontSize:"16px"
+                fontSize:"16px",
+                fontWeight:"bold"
               }}
             >
                 Proceed to Checkout
             </button>
+          
         </div>
 
        </div>

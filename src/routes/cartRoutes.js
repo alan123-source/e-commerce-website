@@ -1,5 +1,5 @@
 import express from "express";
-import { getCart,addToCart,removeFromCart } from "../controllers/cartController.js";
+import { getCart,addToCart,removeFromCart,updateCartQty } from "../controllers/cartController.js";
 import {protect} from "../middleware/authmiddleware.js";
 
 const router=express.Router();
@@ -74,5 +74,6 @@ router.post("/add",protect,addToCart);
  *         description: Unauthorized
  */
 router.delete("/:productId",protect,removeFromCart);
+router.put("/:productId",protect,updateCartQty)
 
 export default router;

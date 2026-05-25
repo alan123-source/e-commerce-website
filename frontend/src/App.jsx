@@ -7,6 +7,8 @@
  import Register from "./pages/Register";
  import ProtectedRoute from "./components/ProtectedRoute";
  import ProductDetails from "./pages/ProductDetails";
+ import Checkout from "./pages/Checkout";
+
  function App(){
   return (
     <>
@@ -17,6 +19,11 @@
         <Route path="/login" element={<Login />}/>
         <Route path="/register" element={<Register />}/>
         <Route path="/products/:id" element={<ProductDetails />}/>
+        <Route path="/checkout" element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        }/>
     </Routes>
     </>
     

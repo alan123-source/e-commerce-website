@@ -44,3 +44,37 @@ export const removeFromCart=async(req,res)=>{
    await cart.save();
    res.json(cart);
 };
+
+export const updateCartQty=async(req,res)=>{
+  const {productId}=req.params;
+  const {qty}=req.body;
+  const cart=await Cart.findOne({
+    user:req.user._id
+  });
+
+  if(!cart){
+    return res.status(404).json({
+      message:"Cart not found"
+    });
+  }
+
+  const item=cart.items.find(
+    (i) => i.product.toString()===productId
+  );
+
+  if(!item){
+    return res.status(404).json({
+      message:"Item not found"
+    });
+  }
+
+  item.qty=qty;
+  await cart.save();
+  const updatedCart=await Cart.findOne({
+    user:req.user._id
+  }).populate(
+    "items.product",
+    "name price image"
+  )
+  res.json(updatedCart);
+}
