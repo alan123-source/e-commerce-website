@@ -23,7 +23,20 @@ const orderSchema=new mongoose.Schema(
         }
        }
    ],
-
+      shippingAddress:{
+        fullName:{
+            type:String
+        },
+        address:{
+            type:String
+        },
+        city:{
+            type:String
+        },
+        postalCode:{
+            type:String
+        }
+      },
     
     totalPrice:{
         type:Number,

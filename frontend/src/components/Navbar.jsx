@@ -138,6 +138,17 @@ function Navbar(){
                </>
 
               ):(
+                <>
+                <Link
+                 to="/my-orders"
+                 style={{
+                  textDecoration:"none",
+                  color:"#333",
+                  fontWeight:"600"
+                 }}
+                >
+                  My Orders
+                </Link>
                 <button
                  onClick={handleLogout}
                  style={{
@@ -153,6 +164,7 @@ function Navbar(){
                 >
                   Logout
                 </button>
+              </>
               )
             } 
 

@@ -8,6 +8,7 @@
  import ProtectedRoute from "./components/ProtectedRoute";
  import ProductDetails from "./pages/ProductDetails";
  import Checkout from "./pages/Checkout";
+ import  MyOrders from "./pages/MyOrders"
 
  function App(){
   return (
@@ -24,6 +25,9 @@
             <Checkout />
           </ProtectedRoute>
         }/>
+        <Route path="/my-orders" element={
+          <ProtectedRoute><MyOrders/></ProtectedRoute>
+        } />
     </Routes>
     </>
     

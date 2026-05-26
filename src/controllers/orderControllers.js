@@ -142,6 +142,15 @@ export const markOrderPaid=async(req,res)=>{
 };
 
 export const createOrderFromCart=async(req,res)=>{
+
+    const {fullName,address,city,postalCode}=req.body;
+
+    if(!fullName||!address||!city||!postalCode){
+        return res.status(400).json({
+            message:"All shipping fields are required"
+        })
+    }
+
    const cart=await Cart.findOne({user:req.user._id}).populate(
     "items.product",
     "price"
@@ -179,6 +188,9 @@ export const createOrderFromCart=async(req,res)=>{
         user:req.user._id,
         orderItems,
         totalPrice,
+        shippingAddress:{
+            fullName,address,city,postalCode
+        },
         status:"PLACED"
      });
 
@@ -216,3 +228,4 @@ export const cancelOrder=async(req,res)=>{
     res.json({message:"order cancelled and stock restored"});
 
 };
+

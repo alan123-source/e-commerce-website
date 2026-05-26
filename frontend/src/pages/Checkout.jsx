@@ -1,4 +1,99 @@
+import {useNavigate} from "react-router-dom";
+import API from "../api/axios";
+import {toast} from "react-toastify";
+import {useEffect,useState} from "react";
+
 function Checkout(){
+    const navigate=useNavigate();
+    const [fullName,setFullName]=useState("");
+    const [address,setAddress]=useState("");
+    const [city,setCity]=useState("");
+    const [postalCode,setPostalCode]=useState("");
+    const [cart,setCart]=useState(null);
+
+    useEffect(()=>{
+  
+      const fetchCart=async()=>{
+        try{
+
+          const token=localStorage.getItem("token");
+          const res=await API.get(
+            "/cart",
+            {
+              headers:{
+                Authorization:`Bearer ${token}`
+              }
+            }
+          );
+          setCart(res.data)
+
+        }catch(error){
+          console.log(error);
+
+        }
+      };
+      fetchCart();
+    },[]);
+
+     const handlePlaceOrder=async()=>{
+
+      if(!fullName||!address||!city||!postalCode){
+        toast.success("❌ Please fill all address fields",{
+          style:{
+            backgroundColor:"#ff4d4f",
+            color:"white"
+          }
+        });
+
+        return;
+      }
+
+       try{
+
+        const token=localStorage.getItem("token");
+        
+        const res=await API.post(
+          "/orders/from-cart",
+          {fullName,
+            address,
+            city,
+            postalCode
+          },
+          {
+            headers:{
+              Authorization:`Bearer ${token}`
+            }
+          }
+        );
+        
+        console.log(res.data);
+        toast.success(" 🎉 Order placed successfully");
+        localStorage.setItem("cartCount",0);
+        window.dispatchEvent(new Event("storage"));
+        navigate("/");
+
+       }catch(error){
+
+        console.log(error);
+        toast.success("❌ Failed to place order",{
+          style:{
+                   backgroundColor:"linear-gradient(to right, #4facfe, #00f2fe)",
+                   color:"white"
+                }
+        });
+
+       }  
+    }
+
+    const subtotal=cart?.items?.reduce(
+      (acc,item)=>
+        acc+item.product.price*item.qty,
+      0
+    ) || 0;
+
+    const shipping=subtotal >1000 ? 0:100;
+    const total=subtotal+shipping;
+
     return (
         <div
           style={{
@@ -32,23 +127,32 @@ function Checkout(){
                 >
                     <h2 style={{marginBottom:"20px"}}>Shipping Address</h2>
                     <input 
+                       
                        type="text"
                        placeholder="Full Name"
+                       value={fullName}
+                       onChange={(e)=>setFullName(e.target.value)}
                        style={inputStyle}
                     />
                     <input 
                      type="text"
                      placeholder="Address"
+                     value={address}
+                     onChange={(e)=>setAddress(e.target.value)}
                      style={inputStyle}
                     />
                     <input 
                       type="text"
                       placeholder="city"
+                      value={city}
+                      onChange={(e)=>setCity(e.target.value)}
                       style={inputStyle}
                     />
                     <input 
                        type="text"
                        placeholder="Postal Code"
+                       value={postalCode}
+                       onChange={(e)=>setPostalCode(e.target.value)}
                        style={inputStyle}
                     />
                 </div>
@@ -68,7 +172,7 @@ function Checkout(){
                         marginBottom:"15px"
                     }}>
                         <span>Subtotal</span>
-                        <span>₹5000</span>
+                        <span>₹{subtotal}</span>
                     </div>
                     <div style={{
                         display:"flex",
@@ -76,7 +180,9 @@ function Checkout(){
                         marginBottom:"15px"
                     }}>
                         <span>Shipping</span>
-                        <span>FREE</span>
+                        <span>
+                          {shipping===0 ? "FREE":`₹${shipping}` }
+                        </span>
                     </div>
                     <hr style={{marginBottom:"20px"}} />
                     <div
@@ -89,9 +195,11 @@ function Checkout(){
                        }}
                     >
                         <span>Total</span>
-                        <span>₹5000</span>
+                        <span>₹{total}</span>
                     </div>
                     <button
+
+                      onClick={handlePlaceOrder}
                       style={{
                         width:"100%",
                         padding:"14px",

@@ -77,7 +77,7 @@ function Cart(){
         (acc,item)=>acc+item.product.price*item.qty,0
     );
 
-    const shipping=totalPrice<1000? 0:100;
+    const shipping=totalPrice>1000? 0:100;
     const grandTotal=totalPrice+shipping;
 
     return (

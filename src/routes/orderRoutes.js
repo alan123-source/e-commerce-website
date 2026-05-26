@@ -68,9 +68,9 @@ router.post("/",protect,createOrder);
  *                 $ref: '#/components/schemas/Order'
  */
 
-router.get("/myorders",protect,getMyOrders);
+router.get("/my-orders",protect,getMyOrders);
 router.put("/pay",protect,markOrderPaid);
-router.post("/checkout",protect,createOrderFromCart);
+router.post("/from-cart",protect,createOrderFromCart);
 router.put("/:id/cancel",protect,cancelOrder);
 
 //admin//

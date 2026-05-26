@@ -114,7 +114,12 @@ function Home(){
       </p>
 
       <button
-        onClick={()=>handleAddToCart(p._id)}
+        onClick={(e)=>{
+          //this prevents navigation to link//
+          e.preventDefault();
+          handleAddToCart(p._id)
+
+        }}
         style={{
           backgroundColor: "#222",
           color: "white",
