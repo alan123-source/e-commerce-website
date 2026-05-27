@@ -8,7 +8,8 @@
  import ProtectedRoute from "./components/ProtectedRoute";
  import ProductDetails from "./pages/ProductDetails";
  import Checkout from "./pages/Checkout";
- import  MyOrders from "./pages/MyOrders"
+ import  MyOrders from "./pages/MyOrders";
+ import AdminOrders from "./pages/AdminOrders";
 
  function App(){
   return (
@@ -28,6 +29,8 @@
         <Route path="/my-orders" element={
           <ProtectedRoute><MyOrders/></ProtectedRoute>
         } />
+        <Route path="/admin/orders" element={<AdminOrders/>} />
+
     </Routes>
     </>
     
