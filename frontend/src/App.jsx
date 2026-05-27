@@ -10,6 +10,7 @@
  import Checkout from "./pages/Checkout";
  import  MyOrders from "./pages/MyOrders";
  import AdminOrders from "./pages/AdminOrders";
+ import AdminProducts from "./pages/AdminProducts";
 
  function App(){
   return (
@@ -30,6 +31,7 @@
           <ProtectedRoute><MyOrders/></ProtectedRoute>
         } />
         <Route path="/admin/orders" element={<AdminOrders/>} />
+        <Route path="/admin/products" element={<AdminProducts/>}/>
 
     </Routes>
     </>

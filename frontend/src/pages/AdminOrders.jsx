@@ -26,6 +26,33 @@ function AdminOrders(){
         fetchOrders();
     },[]);
 
+    const updateStatus=async(orderId,status)=>{
+        try{
+            
+            const token=localStorage.getItem("token");
+            const res=await API.put(
+                `/orders/${orderId}/status`,{status},
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+
+            setOrders(
+                orders.map((order)=>
+                    order._id===orderId
+                   ? {...order,status}
+                   :order
+            )
+            );
+
+
+        }catch(error){
+            console.log(error);
+        }
+    };
+
     return (
         <div 
           style={{
@@ -65,6 +92,54 @@ function AdminOrders(){
                             <strong>Status:</strong>{" "}
                             {order.status}
                         </p>
+                        <div
+                          style={{
+                            marginTop:"15px",
+                            display:"flex",
+                            gap:"10px"
+                          }}
+                        >
+                            {order.status==="PLACED" &&(
+                                <button
+                                 onClick={()=>
+                                    updateStatus(order._id,"SHIPPED")
+                                 }
+                                 style={{
+                                    padding:"10px 15px",
+                                    border:"none",
+                                    borderRadius:"10px",
+                                    backgroundColor:"#4facfe",
+                                    color:"white",
+                                    cursor:"pointer",
+                                    fontWeight:"bold"
+                                 }}
+                                >
+                                    Mark Shipped
+                                </button>
+                            )
+                        }
+
+                        {
+                            order.status==="SHIPPED" &&(
+                                <button
+                                  onClick={()=>
+                                    updateStatus(order._id,"DELIVERED")
+                                  }
+                                  style={{
+                                    padding:"10px 15px",
+                                    border:"none",
+                                    borderRadius:"10px",
+                                    backgroundColor:"#32CD32",
+                                    color:"white",
+                                    cursor:"pointer",
+                                    fontWeight:"bold"
+                                  }}
+                                >
+                                    Mark Delivered
+                                </button>
+                            )
+                        }
+                        </div>
                         <p>
                             <strong>Date:</strong>{" "}
                             {new Date(order.createdAt).toLocaleDateString()}
