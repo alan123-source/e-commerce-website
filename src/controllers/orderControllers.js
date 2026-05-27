@@ -77,7 +77,11 @@ export const createOrder=async(req,res)=>{
 //get user orders//
 
 export const getMyOrders=async(req,res)=>{
-   const orders=await Order.find({user:req.user._id});
+   const orders=await Order.find({
+    user:req.user._id}
+).populate(
+    "orderItems.product","name image"
+);
   successResponse(res,orders,201);
    res.json(orders)
 };

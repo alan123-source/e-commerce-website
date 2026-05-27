@@ -31,6 +31,33 @@ function MyOrders(){
 
     },[]);
 
+    const handleCancelOrder=async(orderId)=>{
+        try{
+
+            const token=localStorage.getItem("token");
+            await API.put(
+                `/orders/${orderId}/cancel`,
+                {},
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+            setOrders(
+                orders.map((order)=>
+                order._id===orderId
+                ?{...order,status:"CANCELLED"}
+                :order
+                )
+            );
+
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+
     return (
         <div
           style={{
@@ -115,6 +142,77 @@ function MyOrders(){
                                     order.createdAt
                                 ).toLocaleDateString()}
                             </p>
+
+                            {
+                                order.status==="PLACED" &&(
+                                  <button
+                                    onClick={()=>
+                                        handleCancelOrder(order._id)
+                                    }
+                                    style={{
+                                        marginTop:"15px",
+                                        padding:"10px 18px",
+                                        border:"none",
+                                        borderRadius:"10px",
+                                        backgroundColor:"#ff4d4f",
+                                        color:"white",
+                                        cursor:"pointer",
+                                        fontWeight:"bold"
+                                    }}
+                                  >
+                                    Cancel Order
+                                  </button>  
+                                )
+                            }
+
+                        <div
+                          style={{
+                            marginTop:"20px"
+                          }}
+                        >
+                            {
+                                order.orderItems.filter((item)=>item.product).map((item)=>(
+                                    <div 
+                                      key={item._id}
+                                      style={{
+                                        display:"flex",
+                                        alignItems:"center",
+                                        gap:"15px",
+                                        marginBottom:"15px",
+                                        backgroundColor:"#f9f9f9",
+                                        padding:"10px",
+                                        borderRadius:"10px"
+                                      }}
+                                    >
+                                        <img
+                                          src={item.product.image}
+                                          alt={item.product.name}
+                                          style={{
+                                            width:"70px",
+                                            height:"70px",
+                                            objectFit:"cover",
+                                            borderRadius:"10px",
+
+                                          }}
+                                        />
+                                        <div>
+                                            <h4
+                                              style={{
+                                                marginBottom:"5px"
+                                              }}
+                                            >{item.product.name}</h4>
+                                            <p>
+                                                Qty:{item.qty}
+                                            </p>
+                                            <p>₹{item.price}</p>
+                                        </div>
+                                    </div>
+
+                                )
+                                )
+                            }
+                        </div>
+
                         </div>
                     ))
 
