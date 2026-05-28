@@ -1,5 +1,6 @@
 import {useEffect,useState} from "react";
 import API from "../api/axios";
+import {Link} from "react-router-dom";
 
 function AdminProducts(){
      const [products,setProducts]=useState([]);
@@ -44,18 +45,41 @@ function AdminProducts(){
     }
 
     return (
-        <div>
-            <h1>
+        <div
+          style={{
+            minHeight:"100vh",
+            backgroundColor:"#f5f5f5",
+            padding:"40px",
+            fontFamily:"Arial",
+            maxWidth:"1200px",
+            margin:"0 auto"
+          }}
+        >
+            <h1
+               style={{
+                marginBottom:"30px"
+               }}
+            >
                 Admin Products
             </h1>
-            <div>
+            <div
+               style={{
+                display:"flex",
+                flexWrap:"wrap",
+                gap:"20px",
+                justifyContent:"flex-start",
+                alignItems:"flex-start"
+
+               }}
+            >
                 {
                     products.map((product)=>(
                         <div
                          key={product._id}
                          style={{
+                            width:"250px",
                             backgroundColor:"white",
-                            padding:"20px",
+                            padding:"16px",
                             borderRadius:"15px",
                             boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
                          }}
@@ -65,7 +89,7 @@ function AdminProducts(){
                               alt={product.name}
                               style={{
                                 width:"100%",
-                                height:"200px",
+                                height:"170px",
                                 objectFit:"cover",
                                 borderRadius:"10px",
                                 marginBottom:"15px"
@@ -86,6 +110,29 @@ function AdminProducts(){
                                 marginBottom:"15px"
                               }}
                             >Stock:{product.stock}</p>
+                            <Link
+                              to={`/admin/edit-product/${product._id}`}
+                              style={{
+                                display:"block",
+                                textDecoration:"none",
+                                marginBottom:"14px"
+                              }}
+                            >
+                             <button
+                                style={{
+                                      width:"100%",
+                                      padding:"12px",
+                                      border:"none",
+                                      borderRadius:"10px",
+                                      backgroundColor:"#4facfe",
+                                      color:"white",
+                                      cursor:"pointer",
+                                      fontWeight:"bold"
+                                }}
+                             >
+                                Edit Product
+                             </button>
+                            </Link>
 
                             <button
                              onClick={()=>

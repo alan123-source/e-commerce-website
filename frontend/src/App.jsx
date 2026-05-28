@@ -11,6 +11,8 @@
  import  MyOrders from "./pages/MyOrders";
  import AdminOrders from "./pages/AdminOrders";
  import AdminProducts from "./pages/AdminProducts";
+ import AddProduct from "./pages/AddProduct";
+ import EditProduct from "./pages/EditProduct";
 
  function App(){
   return (
@@ -32,6 +34,8 @@
         } />
         <Route path="/admin/orders" element={<AdminOrders/>} />
         <Route path="/admin/products" element={<AdminProducts/>}/>
+        <Route path="/admin/add-product" element={<AddProduct />}/>
+        <Route path="/admin/edit-product/:id" element={<EditProduct />}/>
 
     </Routes>
     </>
