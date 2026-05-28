@@ -85,6 +85,16 @@ function ProductDetails(){
 
                 <p
                   style={{
+                    marginTop:"10px",
+                    color:"#555",
+                    lineHeight:"1.6"
+                  }}
+                >
+                  {product.category}
+                </p>
+
+                <p
+                  style={{
                     maginTop:"20px",
                     color:"#555",
                     lineHeight:"1.6"

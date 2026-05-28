@@ -62,9 +62,12 @@ export const updateProduct=async(req,res)=>{
     }
     //newvalue||old value||
     product.name=req.body.name||product.name;
+    product.image=req.body.image||product.image;
     product.price=req.body.price||product.price;
     product.description=req.body.description||req.description;
     product.stock=req.body.stock||req.stock;
+    product.category=req.body.category||req.category;
+
 
     const updateProduct=await product.save();
     res.json(updateProduct);

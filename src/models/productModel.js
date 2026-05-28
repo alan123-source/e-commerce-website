@@ -15,6 +15,11 @@ const productSchema=new mongoose.Schema(
         type:String,
         default:"https://via.placeholder.com/200"
        },
+
+       category:{
+        type:String,
+        required:true
+       },
        
       description:{
         type:String
