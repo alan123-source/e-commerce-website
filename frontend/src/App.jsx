@@ -13,6 +13,7 @@
  import AdminProducts from "./pages/AdminProducts";
  import AddProduct from "./pages/AddProduct";
  import EditProduct from "./pages/EditProduct";
+ import AdminRoute from "./components/AdminRoute";
 
  function App(){
   return (
@@ -32,10 +33,13 @@
         <Route path="/my-orders" element={
           <ProtectedRoute><MyOrders/></ProtectedRoute>
         } />
-        <Route path="/admin/orders" element={<AdminOrders/>} />
-        <Route path="/admin/products" element={<AdminProducts/>}/>
-        <Route path="/admin/add-product" element={<AddProduct />}/>
-        <Route path="/admin/edit-product/:id" element={<EditProduct />}/>
+        <Route path="/admin/orders" element={
+          <AdminRoute>
+          <AdminOrders/>
+          </AdminRoute>} />
+        <Route path="/admin/products" element={<AdminRoute><AdminProducts/></AdminRoute>}/>
+        <Route path="/admin/add-product" element={<AdminRoute><AddProduct /></AdminRoute>}/>
+        <Route path="/admin/edit-product/:id" element={<AdminRoute><EditProduct /></AdminRoute>}/>
 
     </Routes>
     </>

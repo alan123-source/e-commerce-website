@@ -24,6 +24,11 @@ function Login(){
 
             //save token//
             localStorage.setItem("token",res.data.token);
+            localStorage.setItem("role",res.data.role);
+            
+            window.dispatchEvent(
+                new Event("storage")
+            );
             toast.success(" ✅Login Successfull",{
                 style:{
                    backgroundColor:"linear-gradient(to right, #4facfe, #00f2fe)",

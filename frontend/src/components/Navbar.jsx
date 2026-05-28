@@ -3,10 +3,16 @@ import {useEffect,useState} from "react";
 
 function Navbar(){
     const [cartCount,setCartCount]=useState(0);
-    const token=localStorage.getItem("token");
+    const [token,setToken]=useState(
+      localStorage.getItem("token")
+    );
+    const [role,setRole]=useState(
+      localStorage.getItem("role")
+    );
     const handleLogout=()=>{
 
       localStorage.removeItem("token");
+      localStorage.removeItem("role");
       localStorage.removeItem("cartCount");
       window.location.href="/login";
 
@@ -16,6 +22,12 @@ function Navbar(){
     const count = localStorage.getItem("cartCount");
 
     setCartCount(count || 0);
+    setToken(
+      localStorage.getItem("token")
+    );
+    setRole(
+      localStorage.getItem("role")
+    );
   };
 
   updateCartCount();
@@ -149,6 +161,40 @@ function Navbar(){
                 >
                   My Orders
                 </Link>
+
+                 {
+                   role==="admin"&&(
+                    <>
+                      <Link
+                        to="/admin/orders"
+                        style={{
+                          textDecoration:"none",
+                          color:"#333",
+                          fontWeight:"600"
+                        }}
+                      >Admin Orders</Link>
+                      <Link 
+                        to="/admin/products"
+                        style={{
+                          textDecoration:"none",
+                          color:"#333",
+                          fontWeight:"600"
+                        }}
+                      >
+                        Admin Products
+                      </Link>
+                      <Link
+                        to="/admin/add-product"
+                        style={{
+                          textDecoration:"none",
+                          color:"#333",
+                          fontWeight:"600"
+                        }}
+                      >Add Product</Link>
+                    </>
+                   )
+                 }
+
                 <button
                  onClick={handleLogout}
                  style={{

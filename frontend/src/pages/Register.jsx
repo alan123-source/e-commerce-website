@@ -24,6 +24,11 @@ function Register(){
 
             console.log(res.data);
             localStorage.setItem("token",res.data.token);
+            localStorage.setItem("role",res.data.role);
+
+            window.dispatchEvent(
+              new Event("storage")
+            );
             
             toast.success("Registration Successfull",{
               style:{

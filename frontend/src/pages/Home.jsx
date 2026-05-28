@@ -9,6 +9,10 @@ function Home(){
     const [debouncedSearch,setDebouncedSearch]=useState("");
     const [loading,setLoading]=useState(false);
     const [selectedCategory,setSelectedCategory]=useState("All");
+    const [sortOption,setSortOption]=useState("");
+    const [currentPage,setCurrentPage]=useState(1);
+    const [totalPages,setTotalPages]=useState(1);
+
     //debounce logic//
     useEffect(()=>{
       const timer=setTimeout(()=>{
@@ -20,13 +24,14 @@ function Home(){
     useEffect(() => {
 
       setLoading(true);
-  API.get(`/products?keyword=${debouncedSearch}`)
+  API.get(`/products?keyword=${debouncedSearch}&page=${currentPage}`)
     .then((res) => {
       console.log("FULL RESPONSE:", res.data);
 
       // SAFE check
       if (res.data && res.data.data) {
         setProducts(res.data.data);
+        setTotalPages(res.data.pagination.pages)
       } else {
         
         setProducts([]);
@@ -35,15 +40,25 @@ function Home(){
     .catch((err) => console.log("ERROR:", err))
     .finally(()=>setLoading(false));
 
-}, [debouncedSearch]);
+}, [debouncedSearch,currentPage]);
 
-const filteredProducts=
-selectedCategory==="All"
-?products
-:products.filter(
+const filteredProducts= [...products]
+.filter(
   (product)=>
-    product.category===selectedCategory
-);
+    selectedCategory==="All"
+         ||
+        product.category===selectedCategory
+).sort((a,b)=>{
+   if(sortOption==="low-high"){
+    return a.price-b.price
+   }
+
+   if(sortOption==="high-low"){
+    return b.price-a.price;
+   }
+   return 0;
+});
+
 
  
    
@@ -77,7 +92,7 @@ selectedCategory==="All"
         marginBottom:"20px",
         color:"#333"
       }}>Products</h2>
-
+  
       <div
          style={{
           display:"flex",
@@ -122,14 +137,46 @@ selectedCategory==="All"
         }
       </div>
 
+      <select
+        value={sortOption}
+        onChange={(e)=>setSortOption(e.target.value)}
+        style={{
+          padding:"12px 16px",
+          borderRadius:"12px",
+          border:"1px solid #d1d5db",
+          marginBottom:"25px",
+          cursor:"pointer",
+          fontSize:"15px",
+          fontWeight:"500",
+          backgroundColor:"white",
+          color:"#333",
+          outline:"none",
+          boxShadow:"0 2px 6px rgba(0,0,0,0.08)",
+          transition:"0.2s",
+          minWidth:"220px"
+        }}
+      >
+
+        <option value="">
+          Sort  by
+        </option>
+        <option value="low-high">
+          Price:Low to High
+        </option>
+
+        <option value="high-low">
+          Price:High to Low
+        </option>
+      </select>
+
       {/* 🔹 UI states */}
       {loading ? (
         <p>Loading...</p>
       ) : products.length > 0 ? (
 
-        //category buttons//
+      
         
-
+      <>
       
       <div style={{ display: "flex", flexWrap: "wrap", gap: "25px" }}>
   {   filteredProducts.map((p) => (
@@ -194,7 +241,51 @@ selectedCategory==="All"
     </div>
   </Link>
   ))}
+  
 </div>
+ 
+ <div
+   style={{
+    display:"flex",
+    gap:"10px",
+    marginTop:"30px",
+    flexWrap:"wrap"
+   }}
+ >
+  {
+    [...Array(totalPages)].map((_,index)=>(
+      <button
+        key={index}
+        onClick={()=>
+          setCurrentPage(index+1)
+        }
+
+        style={
+          {
+            padding:"10px 16px",
+            border:"none",
+            borderRadius:"8px",
+            cursor:"pointer",
+            background:
+               currentPage===index+1
+               ?"#222"
+               :"#e5e7eb",
+            color:
+              currentPage===index+1
+              ?"white"
+              :"#333",
+              fontWeight:"600"
+          }
+        }
+      >
+        {index+1}
+      </button>
+    ))
+  }
+
+ </div>
+
+    </>
  
        
       ) : (
