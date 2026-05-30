@@ -132,3 +132,50 @@ export const createProductReview=async(req,res)=>{
         })
     }
 }
+
+export const deleteReview=async(req,res)=>{
+    try{
+
+        const product=await Product.findById(req.params.productId);
+        if(!product){
+            res.status(404).json({
+                message:"Product not found"
+            })
+        }
+           const review=product.reviews.find((review)=>
+            review._id.toString()===req.params.reviewId
+        );
+
+        if(!review){
+            return res.status(404).json({
+                message:"Review not found"
+            });
+        }
+        if(review.user.toString()!==req.user._id.toString()){
+            return res.status(401).json({
+                message:"Not authorized"
+            });
+        }
+        product.reviews=product.reviews.filter(
+            (review)=>
+                review._id.toString()!==req.params.reviewId
+        );
+        product.numReviews=product.reviews.length;
+        product.rating=product.reviews.length >0
+        ?product.reviews.reduce(
+            (acc,item)=>acc+item.rating,0
+        )/product.reviews.length
+        :0;
+        await product.save();
+        res.json({
+            message:"Review Deleted"
+        });
+    }catch(error){
+
+        console.log(error);
+        res.status(500).json({
+            message:"server error"
+        });
+
+    }
+};

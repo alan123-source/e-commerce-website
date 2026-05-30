@@ -14,6 +14,7 @@ function Navbar(){
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("cartCount");
+      localStorage.removeItem("userId");
       window.location.href="/login";
 
     };

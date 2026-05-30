@@ -1,7 +1,7 @@
 import express from "express";
 import {body} from "express-validator";
 import validateRequest from "../middleware/validateRequest.js";
-import { CreateProduct,getProducts,getProductById,updateProduct,deleteProduct,createProductReview} from "../controllers/productController.js";
+import { CreateProduct,getProducts,getProductById,updateProduct,deleteProduct,createProductReview,deleteReview} from "../controllers/productController.js";
 import { protect,admin} from "../middleware/authmiddleware.js";
 
 
@@ -76,6 +76,7 @@ router.post("/",protect,admin,
 router.put("/:id",protect,admin,updateProduct);
 router.delete("/:id",protect,admin,deleteProduct);
 router.post("/:id/reviews",protect,createProductReview);
+router.delete("/:productId/reviews/:reviewId",protect,deleteReview);
 
 export default router;
 

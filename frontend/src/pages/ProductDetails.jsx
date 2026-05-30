@@ -166,8 +166,8 @@ function ProductDetails(){
                 alignItems:"center"
              }}
           >
-            <ReviewForm id={id}/>
-            <ReviewList reviews={product.reviews} />
+            <ReviewForm id={id} reviews={product.reviews}/>
+            <ReviewList reviews={product.reviews} productId={id}/>
           </div>
 
         </div>

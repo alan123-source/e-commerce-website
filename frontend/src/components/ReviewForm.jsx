@@ -2,9 +2,16 @@ import {useState} from "react";
 import API from "../api/axios";
 import {toast} from "react-toastify";
 
-function ReviewForm({id}){
+function ReviewForm({id,reviews}){
     const [rating,setRating]=useState("");
     const [comment,setComment]=useState("");
+    const token=localStorage.getItem("token");
+    const userId=localStorage.getItem("userId");
+
+    const alreadyReviewed=reviews?.find(
+      (review)=>
+        review.user===userId
+    )
     
     const handleReviewSubmit=async(e)=>{
       e.preventDefault();
@@ -32,7 +39,7 @@ function ReviewForm({id}){
 
       }catch(error){
         console.log(error);
-        toast.success(error.response?.data?.message,{
+        toast.error(error.response?.data?.message,{
           style:{
             background:"linear-gradient(to right, #ff9966, #ff5e62)",
             color:"white"
@@ -70,7 +77,19 @@ function ReviewForm({id}){
             >
               Share your experience about this product
             </p>
-            <form
+            {
+              token?(
+                alreadyReviewed?(
+
+                  <p
+                    style={{
+                      color:"#666",
+                      fontSize:"15px"
+                    }}
+                  >You already reviewed this product</p>
+
+                ):(
+           <form
               onSubmit={handleReviewSubmit}
               style={{
                 display:"flex",
@@ -150,7 +169,20 @@ function ReviewForm({id}){
                   Submit Review
                 </button>
             </form>
-        </div>
+                )
+          
+              ):(
+                 <p
+                   style={{
+                    color:"#666",
+                    fontSize:"15px"
+                   }}
+                 >
+                  Please login to write a review
+                 </p>
+              )
+        }
+     </div>
     )
 }
 

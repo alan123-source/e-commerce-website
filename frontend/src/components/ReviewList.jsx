@@ -1,4 +1,40 @@
-function ReviewList({reviews}){
+import API from "../api/axios";
+import {toast} from "react-toastify";
+
+function ReviewList({reviews,
+    productId
+}){
+
+    const userId=localStorage.getItem("userId");
+    const handleDeleteReview=async(reviewId)=>{
+        try{
+            
+            const token=localStorage.getItem("token");
+            await API.delete(
+                `/products/${productId}/reviews/${reviewId}`,
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+
+            toast.success("Review Deleted",{
+                style:{
+                    background:"linear-gradient(to right,#667eea,#764ba2)",
+                    color:"white"
+                }
+            });
+            window.location.reload();
+
+        }catch(error){
+            console.log(error);
+            toast.error(
+                error.response?.data?.message
+            );
+        }
+    };
+
     return(
         <div
            style={{
@@ -37,11 +73,36 @@ function ReviewList({reviews}){
                                 marginBottom:"14px"
                               }}
                             >
-                                <h3
+                               <div 
                                  style={{
-                                    color:"#222"
+                                    display:"flex",
+                                    alignItems:"center",
+                                    gap:"12px"
                                  }}
-                                >{review.name}</h3>
+                               >
+                                  <div
+                                    style={{
+                                        width:"45px",
+                                        height:"45px",
+                                        borderRadius:"50%",
+                                        background:"linear-gradient(to right,#667eea,#764ba2)",
+                                        color:"white",
+                                        display:"flex",
+                                        alignItems:"center",
+                                        justifyContent:"center",
+                                        fontWeight:"bold",
+                                        fontSize:"18px"
+                                    }}
+                                  > {review.name.charAt(0)}
+                                    </div>
+                                   
+                                    <h3
+                                      style={{
+                                        color:"#222"
+                                      }}
+                                    >{review.name}</h3>
+                                  
+                               </div>
                                 <p 
                                    style={{
                                     color:"#f59e0b",
@@ -57,6 +118,27 @@ function ReviewList({reviews}){
                                 lineHeight:"1.6"
                                }}
                             >{review.comment}</p>
+
+                            {
+                                review.user===userId &&(
+                                    <button
+                                       onClick={()=>handleDeleteReview(review._id)}
+                                       style={{
+                                        marginTop:"14px",
+                                        backgroundColor:"#ef4444",
+                                        color:"white",
+                                        border:"none",
+                                        padding:"10px 14px",
+                                        borderRadius:"10px",
+                                        cursor:"pointer",
+                                        fontWeight:"600"
+                                       }}
+                                    >
+                                        Delete Review
+                                    </button>
+                                )
+                            }
+
                             <p
                               style={{
                                 marginTop:"12px",
