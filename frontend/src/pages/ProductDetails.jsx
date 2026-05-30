@@ -2,11 +2,15 @@ import {useEffect,useState} from "react";
 import {useParams} from "react-router-dom";
 import API from "../api/axios";
 import {handleAddToCart} from "../utils/cart.js";
+import {toast} from "react-toastify";
+import ReviewForm from "../components/ReviewForm";
+import ReviewList from "../components/ReviewList"
 
 function ProductDetails(){
 
     const {id}=useParams();
     const [product,setProduct]=useState(null);
+    
 
     useEffect(()=>{
         const fetchProduct=async()=>{
@@ -22,6 +26,7 @@ function ProductDetails(){
 
     },[id]);
 
+
     if(!product){
         return <h2>Loading ....</h2>;
     }
@@ -31,7 +36,7 @@ function ProductDetails(){
         <div
           style={{
             padding:"50px",
-            display:"flex",
+            
             gap:"50px",
             backgroundColor:"#f5f5f5",
             minHeight:"100vh",
@@ -39,6 +44,14 @@ function ProductDetails(){
             justifyContent:"center"
           }}
         >
+          <div
+   style={{
+      display:"flex",
+      gap:"50px",
+      alignItems:"center",
+      justifyContent:"center"
+   }}
+>
             <img 
                src={product.image}
                alt={product.name}
@@ -100,6 +113,34 @@ function ProductDetails(){
                     lineHeight:"1.6"
                   }}
                 >{product.description}</p>
+
+                <div
+                  style={{
+                    marginTop:"15px",
+                    marinBottom:"20px"
+                  }}
+                >
+                  <p
+                    style={{
+                      fontWeight:"bold",
+                      fontSize:"20px",
+                      color:"#222"
+                    }}
+                  >{"⭐".repeat(Math.round(product.rating||0))}</p>
+                  <span
+                    style={{
+                      marginLeft:"10px",
+                      color:"#555",
+                      fontSize:"16px"
+                    }}
+                  >{product.rating?.toFixed(1)} out of 5</span>
+                  <p
+                     style={{
+                      color:"#666",
+                      marginTop:"5px"
+                     }}
+                  >{product.numReviews} Reviews</p>
+                </div>
                 <button
                   onClick={()=>handleAddToCart(product._id)}
                   style={{
@@ -116,6 +157,18 @@ function ProductDetails(){
                   }}
                 >Add To Cart</button>
             </div>
+          </div>
+          <div  
+            style={{
+                    marginTop:"50px",
+                   display:"flex",
+                 flexDirection:"column",
+                alignItems:"center"
+             }}
+          >
+            <ReviewForm id={id}/>
+            <ReviewList reviews={product.reviews} />
+          </div>
 
         </div>
 
