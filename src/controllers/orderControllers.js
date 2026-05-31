@@ -120,7 +120,8 @@ export const updateOrderStatus=async(req,res)=>{
 };
 
 export const markOrderPaid=async(req,res)=>{
-    const {orderId,paymentIntentId}=req.body;
+    try{
+        const {orderId,paymentIntentId}=req.body;
     
     if (!orderId||!paymentIntentId){
       return res.status(400).json({message:"Order ID and payment ID required"});   
@@ -141,6 +142,10 @@ export const markOrderPaid=async(req,res)=>{
 
     const updateOrder=await order.save();
     res.json(updateOrder);
+    }catch(error){
+        console.log(error)
+    }
+   
 
 
 };

@@ -28,7 +28,7 @@ export const createPaymentIntent=async(req,res)=>{
 
     res.json({
         clientSecret:paymentIntent.client_secret,
-      // paymentIntentId:paymentIntent.id
+      paymentIntentId:paymentIntent.id
     });
 
 };

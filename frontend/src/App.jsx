@@ -14,6 +14,7 @@ import Home from "./pages/Home";
  import AddProduct from "./pages/AddProduct";
  import EditProduct from "./pages/EditProduct";
  import AdminRoute from "./components/AdminRoute";
+ import PaymentPage from "./pages/PaymentPage";
 
  function App(){
   return (
@@ -40,6 +41,7 @@ import Home from "./pages/Home";
         <Route path="/admin/products" element={<AdminRoute><AdminProducts/></AdminRoute>}/>
         <Route path="/admin/add-product" element={<AdminRoute><AddProduct /></AdminRoute>}/>
         <Route path="/admin/edit-product/:id" element={<AdminRoute><EditProduct /></AdminRoute>}/>
+        <Route path="/payment/:orderId" element={<PaymentPage/>} />
 
     </Routes>
     </>
