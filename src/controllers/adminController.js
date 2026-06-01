@@ -5,8 +5,15 @@ import Product from "../models/productModel.js";
 export const getAnalytics=async(req,res)=>{
     const totalOrders=await Order.countDocuments();
     const totalUsers=await User.countDocuments();
+    const toatalProducts=await Product.countDocuments();
     const revenueData=await Order.aggregate([
-        {
+        
+            {
+                $match:{
+                    isPaid:true
+                }
+            },
+            {
             $group:{
                 _id:null,
                 totalRevenue:{$sum:"$totalPrice"}
@@ -21,6 +28,7 @@ export const getAnalytics=async(req,res)=>{
         data:{
             totalUsers,
             totalOrders,
+            totalProducts,
             totalRevenue,
             topProduct
         }

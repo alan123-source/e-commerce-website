@@ -3,20 +3,55 @@ import {Elements,CardElement,useStripe,useElements} from "@stripe/react-stripe-j
 import API from "../api/axios";
 import {useParams,useNavigate} from "react-router-dom";
 import{toast} from "react-toastify";
+import {useState,useEffect} from "react";
+
 
 const stripePromise=loadStripe(
     import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
 );
 
 function CheckOutForm(){
- 
+   
     const stripe=useStripe();
     const elements=useElements();
     const {orderId}=useParams();
     const navigate=useNavigate();
+    const [order,setOrder]=useState(null);
+    const [loading,setLoading]=useState(false);
+    useEffect(()=>{
+        const fetchOrder=async()=>{
+            try{
+                const token=localStorage.getItem("token");
+                const res=await API.get(
+                    `/orders/${orderId}`,
+                    {
+                        headers:{
+                            Authorization:`Bearer ${token}`
+                        }
+                    }
+                );
+                setOrder(res.data);
+            }catch(error){
+                console.log(error)
+            }
+        }
+        fetchOrder();
+
+    },[orderId])
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
+        setLoading(true);
+        if(order.isPaid){
+            setLoading(false);
+            toast.success("order already paid",{
+                style:{
+                    background:"linear-gradient(to right, #4facfe, #00f2fe)",
+                    white:"white"
+                }
+            });
+            return;
+        }
         try{
            
             const token=localStorage.getItem("token");
@@ -45,8 +80,13 @@ function CheckOutForm(){
        )
 
        if(result.error){
-        console.log(result.error.message)
+       // console.log(result.error.message)
+       setLoading(false);
+
+       toast.error(result.error.message)
+
        }else{
+        setLoading(false);
         console.log("Payment Successfull");
         console.log(result.paymentIntent);
         console.log(orderId);
@@ -73,7 +113,9 @@ function CheckOutForm(){
             console.log(error)
         }
     };
-
+         if(!order){
+            return <h2>Loading......</h2>
+         }
     return (
         <form 
         onSubmit={handleSubmit}
@@ -91,8 +133,26 @@ function CheckOutForm(){
                 maxWidth:"500px",
                 boxShadow:"0 4px 12px rgba(0,0,0,0.1)"
               }}
-            >
-                <CardElement
+            >  {
+                order.isPaid?(
+                   <div
+                    style={{
+                        marginTop:"20px",
+                        padding:"20px",
+                        borderRaius:"14px",
+                        backgroundColor:"#dcfce7",
+                        color:"#166534",
+                        fontWeight:"bold",
+                        textAlign:"center"
+                    }}
+                   >
+                    ✅ This order
+                  has already been paid
+
+                   </div>
+                ):(
+                    <>
+                     <CardElement
                   options={{
                     disableLink:true,
                     style:{
@@ -104,6 +164,7 @@ function CheckOutForm(){
                 />
                 <button
                   type="submit"
+                  disabled={loading}
                   style={{
                     marginTop:"25px",
                     width:"100%",
@@ -117,8 +178,16 @@ function CheckOutForm(){
                     fontSize:"16px"
                   }}
                 >
-                    pay Now
+                  {
+                    loading ? "processing..."
+                    :
+                    "Pay Now"
+                  }
                 </button>
+            </>
+                )
+            }
+                
             </div>
         </form>
     )

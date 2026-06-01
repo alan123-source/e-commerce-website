@@ -89,6 +89,23 @@ function AdminOrders(){
                             ₹{order.totalPrice}
                         </p>
                         <p>
+                            <strong>Payment:</strong>{" "}
+                            <span
+                               style={{
+                                color:
+                                order.isPaid?"green"
+                                :"red",
+                                fontWeight:"bold"
+                               }}
+                            >
+                                {
+                                    order.isPaid
+                                    ?"✅ Paid"
+                                    :"❌ Pending"
+                                }
+                            </span>
+                        </p>
+                        <p>
                             <strong>Status:</strong>{" "}
                             {order.status}
                         </p>

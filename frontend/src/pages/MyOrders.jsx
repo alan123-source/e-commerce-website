@@ -128,6 +128,22 @@ function MyOrders(){
                                 <strong>Total:</strong>{""}
                                 ₹{order.totalPrice}
                             </p>
+
+                             <p
+                                style={{
+                                    marginTop:"10px",
+                                    fontWeight:"bold",
+                                    color:
+                                 order.isPaid?"green"
+                                 :"red"   
+                                }}
+                             >
+                                {
+                                    order.isPaid ? "✅ Paid"
+                                    :"❌ Pending"
+                                }
+                             </p>
+
                             <p
                               style={{
                                 marginBottom:"10px"
@@ -137,7 +153,7 @@ function MyOrders(){
                                 {order.orderItems.length}
                             </p>
                             <p>
-                                <strong>Date:</strong>{""}
+                                <strong>Ordered on:</strong>{""}
                                 {new Date(
                                     order.createdAt
                                 ).toLocaleDateString()}
