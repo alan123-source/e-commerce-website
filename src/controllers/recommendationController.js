@@ -1,7 +1,12 @@
 import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 
+
 export const getRecommendations=async(req,res)=>{
+
+   
+try{
+
    const userId=req.user._id;
  //get users past orders//
  const orders=await Order.find({user:userId}).populate("orderItems.product",
@@ -51,6 +56,13 @@ export const getRecommendations=async(req,res)=>{
   data:recommendations 
 
 });
+
+}catch(error){
+   res.status(500).json({
+      message:"server error"
+   });
+}
+   
 
 
 };

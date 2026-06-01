@@ -3,9 +3,12 @@ import User from "../models/userModel.js";
 import Product from "../models/productModel.js";
 
 export const getAnalytics=async(req,res)=>{
-    const totalOrders=await Order.countDocuments();
+
+    try{
+
+         const totalOrders=await Order.countDocuments();
     const totalUsers=await User.countDocuments();
-    const toatalProducts=await Product.countDocuments();
+    const totalProducts=await Product.countDocuments();
     const revenueData=await Order.aggregate([
         
             {
@@ -21,8 +24,8 @@ export const getAnalytics=async(req,res)=>{
         }
     ]);
     const totalRevenue=revenueData[0]?.totalRevenue||0;
-    const topProduct=(await Product.find()).sort({soldCount:-1})
-    .limit(5);
+    const topProduct=await Product.find().sort({soldCount:-1}).limit(5);
+    
     res.json({
         success:true,
         data:{
@@ -33,4 +36,9 @@ export const getAnalytics=async(req,res)=>{
             topProduct
         }
     });
+
+    }catch(error){
+        console.log(error);
+    }
+   
 };

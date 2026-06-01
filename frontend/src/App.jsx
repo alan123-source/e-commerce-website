@@ -15,6 +15,7 @@ import Home from "./pages/Home";
  import EditProduct from "./pages/EditProduct";
  import AdminRoute from "./components/AdminRoute";
  import PaymentPage from "./pages/PaymentPage";
+ import AdminDashboard from "./pages/AdminDashboard";
 
  function App(){
   return (
@@ -42,6 +43,7 @@ import Home from "./pages/Home";
         <Route path="/admin/add-product" element={<AdminRoute><AddProduct /></AdminRoute>}/>
         <Route path="/admin/edit-product/:id" element={<AdminRoute><EditProduct /></AdminRoute>}/>
         <Route path="/payment/:orderId" element={<PaymentPage/>} />
+        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard/></AdminRoute>}/>
 
     </Routes>
     </>

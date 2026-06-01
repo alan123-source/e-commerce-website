@@ -65,12 +65,14 @@ function Checkout(){
             }
           }
         );
-        
+        console.log("get id from console");
         console.log(res.data);
-        toast.success(" 🎉 Order placed successfully");
+        console.log(res.data._id);
+        const orderId=res.data._id;
+       // toast.success(" 🎉 Order placed successfully");
         localStorage.setItem("cartCount",0);
         window.dispatchEvent(new Event("storage"));
-        navigate("/");
+        navigate(`/payment/${orderId}`);
 
        }catch(error){
 

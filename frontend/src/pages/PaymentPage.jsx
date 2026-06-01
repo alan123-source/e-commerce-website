@@ -56,7 +56,7 @@ function CheckOutForm(){
            
             const token=localStorage.getItem("token");
             const res=await API.post("/payment/create",{
-                amount:500
+                amount:order.totalPrice
             },
             {
                 headers:{

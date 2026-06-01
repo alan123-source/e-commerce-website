@@ -24,6 +24,10 @@ function AdminProducts(){
     const handleDelete=async(productId)=>{
         try{
             const token=localStorage.getItem("token");
+            const confirmDelete=window.confirm("Delete this product ?");
+            if (!confirmDelete){
+                return;
+            }
             await API.delete(
                 `/products/${productId}`,
                 {
@@ -62,6 +66,29 @@ function AdminProducts(){
             >
                 Admin Products
             </h1>
+            <Link
+               to="/admin/add-product"
+               style={{
+                textDecoration:"none",
+                backgroundColor:"#333",
+                fontWeight:"600"
+               }}
+            >
+              <button
+                style={{
+                    padding:"14px 20px",
+                    border:"none",
+                    borderRadius:"12px",
+                    backgroundColor:"#333333",
+                    color:"white",
+                    cursor:"pointer",
+                    fontWeight:"bold",
+                    marginBottom:"25px"
+                }}
+              >
+                ➕ Create Product
+              </button>
+            </Link>
             <div
                style={{
                 display:"flex",

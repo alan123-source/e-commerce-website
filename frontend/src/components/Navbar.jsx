@@ -167,6 +167,16 @@ function Navbar(){
                    role==="admin"&&(
                     <>
                       <Link
+                       style={{
+                        textDecoration:"none",
+                        color:"#222",
+                        fontWeight:"600"
+                       }}
+                        to="/admin/dashboard"
+                      >
+                        Admin Dashboard
+                      </Link>
+                      <Link
                         to="/admin/orders"
                         style={{
                           textDecoration:"none",

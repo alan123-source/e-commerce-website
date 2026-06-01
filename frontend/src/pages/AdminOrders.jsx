@@ -53,6 +53,38 @@ function AdminOrders(){
         }
     };
 
+    const handleRefund=async(orderId)=>{
+        try{
+
+            const confirmRefund=window.confirm("Refunf this order");
+            if(!confirmRefund){
+                return;
+            }
+            const token=localStorage.getItem("token");
+            await API.post("/payment/refund",{orderId},
+                {
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+            );
+            setOrders(
+                orders.map((order)=>
+                order._id===orderId
+                ?{
+                    ...order,
+                    status:"CANCELLED",
+                    isRefunded:true
+                }
+                :order
+            )
+            );
+
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return (
         <div 
           style={{
@@ -153,6 +185,25 @@ function AdminOrders(){
                                   }}
                                 >
                                     Mark Delivered
+                                </button>
+                            )
+                        }
+                        {
+                            order.isPaid &&order.status!=="DELIVERED"&&
+                            !order.isRefunded &&(
+                                <button
+                                 onClick={()=>handleRefund(order._id)}
+                                  style={{
+                                    padding:"10px 15px",
+                                    border:"none",
+                                    borderRadius:"10px",
+                                    backgroundColor:"#ff4d4f",
+                                    color:"white",
+                                    cursor:"pointer",
+                                    fontWeight:"bold"
+                                  }}
+                                >
+                                    Refund Order
                                 </button>
                             )
                         }
