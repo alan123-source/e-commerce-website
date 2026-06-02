@@ -26,6 +26,12 @@
                 type:mongoose.Schema.Types.ObjectId,
                 ref:"Product"
             }
+        ],
+        recentlyViewed:[
+            {
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Product"
+            }
         ]
 
         },
