@@ -1,5 +1,6 @@
 import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
+import mongoose from "mongoose";
 
 
 export const getRecommendations=async(req,res)=>{
@@ -10,10 +11,11 @@ try{
    const userId=req.user._id;
  //get users past orders//
  const orders=await Order.find({user:userId}).populate("orderItems.product",
-    "tags"
+    "tags category"
  );
  let userTags=[];
  let purchasedProductIds=[];
+ let userCategories=[];
  //extract tag from purchased products//
  orders.forEach((order)=>{
     order.orderItems.forEach((item)=>{
@@ -24,6 +26,10 @@ try{
         
          if(item.product.tags){
             userTags.push(...item.product.tags);
+
+         }
+         if (item.product.category){
+            userCategories.push(item.product.category.toLowerCase())
          }
       }
 
@@ -31,6 +37,7 @@ try{
  });
   //remove duplicate tags//
   userTags=[...new Set(userTags)];
+  userCategories=[...new Set(userCategories)];
   //cold start//
   if (userTags.length===0){
 
@@ -44,17 +51,72 @@ try{
  }
 
  //personalized recommendations///
- const recommendations=await Product.find({
+ const recommendations = await Product.aggregate([
+  
+  {
+    $match: {
+      tags: { $in: userTags },
+      _id: {
+        $nin: purchasedProductIds.map(
+          (id) => new mongoose.Types.ObjectId(id)
+        )
+      }
+    }
+  },
 
-    tags:{$in:userTags},
-    _id:{$nin:purchasedProductIds}
- }).sort({soldCount:-1}).limit(5);
+  {
+    $addFields: {
+      matchedTagsCount: {
+        $size: {
+          $setIntersection: ["$tags", userTags]
+        }
+      },
+      categoryBoost:{
+         $cond:[
+            {$in:[{$toLower:"$category"},userCategories]},
+            5,
+            0
+         ]
+      }
+    }
+  },
+  {
+      $addFields:{
+         recommendationScore:{
+            $add:[
+               "$matchedTagsCount",
+               "$categoryBoost"
+            ]
+         }
+      }
+  },
 
- return res.json({
+  {
+    $sort: {
+      recommendationScore: -1,
+      soldCount: -1
+    }
+  },
+
+  {
+    $limit: 5
+  }
+]);
+
+console.log("user tags:",userTags);
+console.log("user categories",userCategories);
+console.log("recommendations",recommendations.map((p)=>({
+   name:p.name,
+   category:p.category,
+   matchedTagsCount:p.matchedTagsCount,
+   categoryBoost:p.categoryBoost,
+   recommendationScore:p.recommendationScore
+})))
+
+return res.json({
    success:true,
-  type:"personalized",
-  data:recommendations 
-
+   type:"personalized",
+   data:recommendations
 });
 
 }catch(error){

@@ -1,6 +1,7 @@
 import {useState} from "react";
 import API from "../api/axios";
 import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 function AddProduct(){
     const [name,setName]=useState("");
@@ -9,6 +10,10 @@ function AddProduct(){
     const [stock,setStock]=useState("");
     const [category,setCategory]=useState("");
     const [description,setDescription]=useState("");
+    const [tags,setTags]=useState("");
+    const navigate=useNavigate();
+
+
 
     const handleAddProduct=async(e)=>{
         e.preventDefault();
@@ -24,7 +29,8 @@ function AddProduct(){
                     price,
                     stock,
                     category,
-                    description
+                    description,
+                    tags
                 },
 
                 {
@@ -41,6 +47,7 @@ function AddProduct(){
                     color:"white"
                 }
             })
+            navigate("/");
 
 
         }catch(error){
@@ -113,6 +120,13 @@ function AddProduct(){
                   placeholder="Category"
                   value={category}
                   onChange={(e)=>setCategory(e.target.value)}
+                  style={inputStyle}
+                />
+                <input 
+                  type="text"
+                  placeholder="Tags (comma seperated)"
+                  value={tags}
+                  onChange={(e)=>setTags(e.target.value)}
                   style={inputStyle}
                 />
                 <textarea

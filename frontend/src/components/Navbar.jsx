@@ -117,7 +117,22 @@ function Navbar(){
              >
                 {cartCount}
              </span>
+             
             </Link> 
+
+               <Link
+              to="/wishlist"
+              style={{
+                textDecoration:"none",
+                color:"#333",
+                fontWeight:"600"
+                
+              }}
+             >
+                ❤️ Wishlist
+
+             </Link>
+
             {
               !token ?(
                <>

@@ -16,6 +16,7 @@ import Home from "./pages/Home";
  import AdminRoute from "./components/AdminRoute";
  import PaymentPage from "./pages/PaymentPage";
  import AdminDashboard from "./pages/AdminDashboard";
+ import Wishlist from "./pages/Wishlist";
 
  function App(){
   return (
@@ -44,6 +45,7 @@ import Home from "./pages/Home";
         <Route path="/admin/edit-product/:id" element={<AdminRoute><EditProduct /></AdminRoute>}/>
         <Route path="/payment/:orderId" element={<PaymentPage/>} />
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard/></AdminRoute>}/>
+        <Route path="/wishlist"element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
 
     </Routes>
     </>

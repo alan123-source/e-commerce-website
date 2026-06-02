@@ -4,13 +4,13 @@ import { successResponse } from "../utils/apiResponse.js";
 //CREATE PRODUCT//
 export const  CreateProduct=async(req,res)=>{
 
-    const {name,image,price,description,stock,category}=req.body;
+    const {name,image,price,description,stock,category,tags}=req.body;
 
     if(!name||price==undefined){
         return res.status(400).json({message:"Name and Price are required"});
     }
     const product =await Product.create({
-        name,image,price,description,stock,category
+        name,image,price,description,stock,category,tags:tags?.split(",").map((tag)=>tag.trim())
     });
     successResponse(res,product,201);
     res.status(201).json(product);

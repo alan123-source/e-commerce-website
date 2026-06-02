@@ -16,6 +16,7 @@ import adminRoutes from "./routes/adminRoutes.js";
 import recommendationRoutes from "./routes/recommendationRoutes.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from './config/swagger.js';
+import wishlistRoutes from "./routes/wishlistRoutes.js";
 
 const app=express();
 if (process.env.NODE_ENV!="production"){
@@ -60,6 +61,7 @@ app.use("/api/payment",paymentRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/recommendations",recommendationRoutes);
+app.use("/api/wishlist",wishlistRoutes);
 app.use(errorHandler);
 
 //app.use((req,res)=>{

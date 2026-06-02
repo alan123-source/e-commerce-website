@@ -2,7 +2,7 @@ import { useEffect,useState } from "react";
 import API from "../api/axios";
 import {Link} from "react-router-dom";
 import {handleAddToCart} from "../utils/cart.js";
-
+import {toast} from "react-toastify";
 function Home(){
     const [products,setProducts]=useState([]);
     const [search,setSearch]=useState("");
@@ -12,6 +12,11 @@ function Home(){
     const [sortOption,setSortOption]=useState("");
     const [currentPage,setCurrentPage]=useState(1);
     const [totalPages,setTotalPages]=useState(1);
+    const [recommended,setRecommended]=useState([]);
+     const [recommendationType,setRecommendationType]=useState("");
+     const [wishlist,setWishlist]=useState([]);
+
+
 
     //debounce logic//
     useEffect(()=>{
@@ -23,7 +28,48 @@ function Home(){
     },[search]);
     useEffect(() => {
 
+          const fetchRecommendations=async()=>{
+        console.log("fetch recomendation started");
+        try{
+
+          const token=localStorage.getItem("token");
+          if(!token){
+            console.log("token",token);
+            return ;
+          }
+          console.log("calling recommendation api")
+          const res=await API.get(
+            "/recommendations",{
+              headers:{
+                Authorization:`Bearer ${token}`
+              }
+            }
+          );
+        //  console.log(res.data);
+        console.log("FULL RECOMMENDATION RESPONSE:",res.data);
+
+      console.log("DATA:",res.data.data);
+
+      console.log("TYPE:",typeof res.data.data);
+
+        console.log("IS ARRAY:",Array.isArray(res.data.data));
+          setRecommended(res.data.data);
+          console.log(res.data.type);
+          setRecommendationType(res.data.type);
+
+        }catch(error){
+          
+          console.log("RECOMMENDATION ERROR:",error);
+
+           console.log("ERROR RESPONSE:",error.response);
+
+        console.log("ERROR DATA:",error.response?.data);
+
+        }
+      }
       setLoading(true);
+      fetchRecommendations();
+      
   API.get(`/products?keyword=${debouncedSearch}&page=${currentPage}`)
     .then((res) => {
       console.log("FULL RESPONSE:", res.data);
@@ -42,6 +88,33 @@ function Home(){
 
 }, [debouncedSearch,currentPage]);
 
+useEffect(()=>{
+   //fetch wishlist//
+          const fetchWishlist=async()=>{
+               try{
+                
+
+                const token=localStorage.getItem("token");
+                if(!token){
+                  return;
+                }
+                const res=await API.get(
+                    "/wishlist",{
+                      headers:{
+                        Authorization:`Bearer ${token}`
+                      }
+                    }
+                  );
+                setWishlist(res.data.wishlist.map((p)=>p._id.toString()));
+              
+               }catch(error){
+                console.log(error);
+               }
+          }
+
+          fetchWishlist();
+},[]);
+
 const filteredProducts= [...products]
 .filter(
   (product)=>
@@ -59,6 +132,35 @@ const filteredProducts= [...products]
    return 0;
 });
 
+const handleWishlistToggle=async(productId)=>{
+  try{
+    const token=await localStorage.getItem("token");
+    if(!token){
+     // alert("please login first");
+     toast.error("please login first",{
+      style:{
+        background:"red",
+        color:"white"
+      }
+     })
+      return;
+    }
+    const res=await API.post(
+      `/wishlist/${productId}`,{},
+      {
+        headers:{
+        Authorization:`Bearer ${token}`
+        }
+      }
+    );
+     setWishlist(res.data.wishlist.map(
+      (id)=>id.toString()
+     ));
+
+  }catch(error){
+    console.log(error);
+  }
+}
 
  
    
@@ -92,6 +194,68 @@ const filteredProducts= [...products]
         marginBottom:"20px",
         color:"#333"
       }}>Products</h2>
+      {
+        recommended.length >0 &&(
+          <>
+             <h2>{
+               
+               recommendationType==="cold-start"?"🔥 Trending Products"
+               :"🔥 Recommended For You"
+
+              }</h2>
+             <div
+                style={{
+                  display:"flex",
+                  gap:"25px",
+                  flexWrap:"wrap",
+                  marginBottom:"40px"
+                }}
+             >
+               {
+                recommended.map((p)=>(
+                  
+                  <Link
+                    key={p._id}
+                    to={`/products/${p._id}`}
+                    style={{
+                      textDecoration:"none",
+                      color:"inherit"
+                    }}
+                  >
+                    <div
+                      style={{
+                        background:"white",
+                        borderRadius:"12px",
+                        padding:"15px",
+                        width:"230px",
+                        boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
+                      }}
+                    >
+                      <img 
+                        src={p.image}
+                        alt={p.name}
+                        style={{
+                          width:"100%",
+                          height:"180px",
+                          objectFit:"cover",
+                          borderRadius:"10px"
+                        }}
+                      />
+                      <h3>{p.name}</h3>
+                      <p
+                        style={{
+                          fontWeight:"bold"
+                        }}
+                      >₹{p.price}</p>
+                    </div>
+                  
+                  </Link>
+                ))
+               }
+             </div>
+          </>
+        )
+      }
   
       <div
          style={{
@@ -210,6 +374,25 @@ const filteredProducts= [...products]
           borderRadius: "10px"
         }}
       />
+      <button
+         onClick={(e)=>{
+          e.preventDefault();
+          handleWishlistToggle(p._id);
+         }}
+
+         style={{
+          border:"none",
+          background:"transparent",
+          cursor:"pointer",
+          fontSize:"24px",
+          float:"right"
+         }}
+      >
+        {
+          wishlist.includes(p._id.toString())?"❤️":
+          "🤍"
+        }
+      </button>
 
       <h3>{p.name}</h3>
 
