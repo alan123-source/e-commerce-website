@@ -10,6 +10,30 @@ function ProductDetails(){
 
     const {id}=useParams();
     const [product,setProduct]=useState(null);
+
+    const trackRecentlyViewed=async()=>{
+      try{
+
+        console.log("calling recently viewed adding api");
+
+        const token=localStorage.getItem("token");
+        if (!token){
+          return;
+        }
+        const res=await API.post(
+          `/recently-viewed/${id}`,
+          {},
+          {
+            headers:{
+              Authorization:`Bearer ${token}`
+            }
+          }
+        );
+
+      }catch(error){
+        console.log(error);
+      }
+    }
     
 
     useEffect(()=>{
@@ -23,6 +47,7 @@ function ProductDetails(){
             }
         };
         fetchProduct();
+        trackRecentlyViewed();
 
     },[id]);
 

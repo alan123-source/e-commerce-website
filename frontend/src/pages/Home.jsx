@@ -3,6 +3,7 @@ import API from "../api/axios";
 import {Link} from "react-router-dom";
 import {handleAddToCart} from "../utils/cart.js";
 import {toast} from "react-toastify";
+import RecentlyViewedSection from "../components/RecentlyViewedSection";
 function Home(){
     const [products,setProducts]=useState([]);
     const [search,setSearch]=useState("");
@@ -15,6 +16,7 @@ function Home(){
     const [recommended,setRecommended]=useState([]);
      const [recommendationType,setRecommendationType]=useState("");
      const [wishlist,setWishlist]=useState([]);
+     const [recentlyViewed,setRecentlyViewed]=useState([]);
 
 
 
@@ -115,6 +117,34 @@ useEffect(()=>{
           fetchWishlist();
 },[]);
 
+useEffect(()=>{
+   const fetchRecentlyViewed=async()=>{
+
+    try{
+    //  console.log("running fetchrecently viewed");
+      const token=localStorage.getItem("token");
+      if(!token){
+        return;
+      }
+      const res=await API.get(
+        "/recently-viewed",{
+          headers:{
+            Authorization:`Bearer ${token}`
+          }
+        }
+      );
+      setRecentlyViewed(res.data.recentlyViewed);
+      //console.log(setRecentlyViewed);
+      //console.log("completed fetch recently");
+
+    }catch(error){
+      console.log(error)
+    }
+
+   }
+   fetchRecentlyViewed();
+},[]);
+
 const filteredProducts= [...products]
 .filter(
   (product)=>
@@ -211,7 +241,7 @@ const handleWishlistToggle=async(productId)=>{
                   marginBottom:"40px"
                 }}
              >
-               {
+              {
                 recommended.map((p)=>(
                   
                   <Link
@@ -256,6 +286,10 @@ const handleWishlistToggle=async(productId)=>{
           </>
         )
       }
+
+      
+      <RecentlyViewedSection recentlyViewed={recentlyViewed} />
+
   
       <div
          style={{
