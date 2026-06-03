@@ -30,11 +30,11 @@ function RecentlyViewedSection({recentlyViewed}){
                         <div
                           key={`${p._id}-${index}`}
                           style={{
-                            width:"220px",
+                            width:"120px",
                             background:"white",
-                            padding:"15px",
-                            borderRadius:"12px",
-                            boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
+                            padding:"10px",
+                            borderRadius:"10px",
+                            boxShadow:"0 3px 8px rgba(0,0,0,0.1)"
                           }}
                         >
                             <img 
@@ -42,13 +42,22 @@ function RecentlyViewedSection({recentlyViewed}){
                                alt={p.name}
                                style={{
                                 width:"100%",
-                                height:"180px",
+                                height:"100px",
                                 objectFit:"cover",
-                                borderRadius:"10px"
+                                borderRadius:"8px"
                                }}
                             />
-                            <h3>{p.name}</h3>
-                            <p>₹{p.price}</p>
+                            <h3
+                              style={{
+                                fontSize:"16px",
+                                margin:"10px 0 5px"
+                              }}
+                            >{p.name}</h3>
+                            <p
+                              style={{
+                                fontSize:"14px"
+                              }}
+                            >₹{p.price}</p>
                         </div>
                     ))
                 }

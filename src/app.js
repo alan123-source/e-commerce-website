@@ -18,6 +18,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from './config/swagger.js';
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import recentlyViewedRoutes from "./routes/recentlyViewedRoutes.js";
+import testMailRoutes from "./routes/testMailRoutes.js"
 
 const app=express();
 if (process.env.NODE_ENV!="production"){
@@ -64,6 +65,7 @@ app.use("/api/admin",adminRoutes);
 app.use("/api/recommendations",recommendationRoutes);
 app.use("/api/wishlist",wishlistRoutes);
 app.use("/api/recently-viewed",recentlyViewedRoutes);
+app.use("/api/test-mail",testMailRoutes);
 app.use(errorHandler);
 
 //app.use((req,res)=>{

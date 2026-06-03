@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import Order from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
+import User from "../models/userModel.js"
 import Product from "../models/productModel.js";
 import { successResponse } from "../utils/apiResponse.js";
+import sendEmail from "../utils/sendEmail.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
@@ -162,7 +164,9 @@ export const markOrderPaid=async(req,res)=>{
 
 export const createOrderFromCart=async(req,res)=>{
 
-    const {fullName,address,city,postalCode}=req.body;
+   try{
+
+     const {fullName,address,city,postalCode}=req.body;
 
     if(!fullName||!address||!city||!postalCode){
         return res.status(400).json({
@@ -172,7 +176,7 @@ export const createOrderFromCart=async(req,res)=>{
 
    const cart=await Cart.findOne({user:req.user._id}).populate(
     "items.product",
-    "price"
+    "price stock"
    );
 
    if(!cart||cart.items.length===0)
@@ -213,10 +217,49 @@ export const createOrderFromCart=async(req,res)=>{
         status:"PLACED"
      });
 
+     //await order.populate("user","name email");
+    const user=await User.findById(req.user._id);
+     const itemsHtml=order.orderItems.map(
+        (item)=>`
+         <li>
+           Quantity:${item.qty}
+           -₹${item.price}
+         </li>
+        `
+     ).join("");
+
+       sendEmail({
+        email:user.email,
+        subject:"Order Confirmed",
+        message:`
+           <h1>Order Placed Successfully</h1>
+           <p>
+              Hi ${user.name},
+           </p>
+           <p>Your order has been placed successfully</p>
+           <h3>Oder Details:</h3>
+           <ul>
+             ${itemsHtml}
+           </ul>
+           <h3>
+             Total:₹${order.totalPrice}
+           </h3>
+           <p>
+             Thank you for shopping with us
+           </p>
+        `
+       }).catch((error)=>{
+        console.log("Email Error:",error);
+       })
+
      //clear cart//
      cart.items=[];
      await cart.save();
-     res.status(201).json(order);
+     return res.status(201).json(order);
+
+   }catch(error){
+    console.log(error)
+   }
 }; 
 
 export const cancelOrder=async(req,res)=>{
