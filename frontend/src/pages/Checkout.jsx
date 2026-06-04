@@ -10,6 +10,8 @@ function Checkout(){
     const [city,setCity]=useState("");
     const [postalCode,setPostalCode]=useState("");
     const [cart,setCart]=useState(null);
+    const [couponCode,setCouponCode]=useState("");
+    const [discount,setDiscount]=useState(0);
 
     useEffect(()=>{
   
@@ -35,6 +37,29 @@ function Checkout(){
       fetchCart();
     },[]);
 
+
+    const handleApplyCoupon=async()=>{
+
+      try{
+
+        const res=await API.post(
+          "coupons/validate",{
+            code:couponCode
+          }
+        );
+
+        setDiscount(res.data.discountPercentage);
+        toast.success(`${res.data.discountPercentage}% discount applied`);
+
+
+      }catch(error){
+        console.log(error);
+        toast.error("Invalid Coupon")
+      }
+
+    }
+
+
      const handlePlaceOrder=async()=>{
 
       if(!fullName||!address||!city||!postalCode){
@@ -57,7 +82,8 @@ function Checkout(){
           {fullName,
             address,
             city,
-            postalCode
+            postalCode,
+            couponCode
           },
           {
             headers:{
@@ -77,6 +103,7 @@ function Checkout(){
        }catch(error){
 
         console.log(error);
+        console.log(error.response?.data);
         toast.success("❌ Failed to place order",{
           style:{
                    backgroundColor:"linear-gradient(to right, #4facfe, #00f2fe)",
@@ -94,7 +121,8 @@ function Checkout(){
     ) || 0;
 
     const shipping=subtotal >1000 ? 0:100;
-    const total=subtotal+shipping;
+    const discountAmount=subtotal*(discount/100);
+    const total=subtotal+shipping-discountAmount;
 
     return (
         <div
@@ -168,6 +196,36 @@ function Checkout(){
                   }}
                 >
                     <h2 style={{marginBottom:"20px"}}>Order Summary</h2>
+
+                    <div
+                      style={{
+                        marginBottom:"20px"
+                      }}
+                    >
+                      <input 
+                        type="text"
+                        value={couponCode}
+                        onChange={(e)=>setCouponCode(e.target.value)}
+                        style={{
+                          width:"100%",
+                          padding:"10px",
+                          marginBottom:"10px"
+                        }}
+                      />
+                      <button
+                        onClick={handleApplyCoupon}
+                        style={{
+                          width:"100%",
+                          padding:"10px",
+                          curson:"pointer",
+                          borderRadius:"20px"
+                        }}
+                      >
+                        Apply Coupon
+                      </button>
+
+                    </div>
+
                     <div style={{
                         display:"flex",
                         justifyContent:"space-between",
@@ -195,7 +253,24 @@ function Checkout(){
                         fontWeight:"bold",
                         fontSize:"20px"
                        }}
-                    >
+                    >{
+                      discount>0 &&(
+                        <div
+                          style={{
+                            display:"flex",
+                            justifyContent:"space-between",
+                            alignItems:"center",
+                            marginBottom:"15px",
+                            color:"green",
+                            
+                          }}
+                        >
+                          <span>Discount</span>
+                          <span>-₹{discountAmount}</span>
+                        </div>
+                      )
+
+                    }
                         <span>Total</span>
                         <span>₹{total}</span>
                     </div>

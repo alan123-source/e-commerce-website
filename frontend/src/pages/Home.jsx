@@ -257,7 +257,7 @@ const handleWishlistToggle=async(productId)=>{
                         background:"white",
                         borderRadius:"12px",
                         padding:"15px",
-                        width:"230px",
+                        width:"180px",
                         boxShadow:"0 4px 10px rgba(0,0,0,0.1)"
                       }}
                     >
@@ -266,7 +266,7 @@ const handleWishlistToggle=async(productId)=>{
                         alt={p.name}
                         style={{
                           width:"100%",
-                          height:"180px",
+                          height:"140px",
                           objectFit:"cover",
                           borderRadius:"10px"
                         }}

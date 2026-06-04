@@ -5,6 +5,7 @@ import User from "../models/userModel.js"
 import Product from "../models/productModel.js";
 import { successResponse } from "../utils/apiResponse.js";
 import sendEmail from "../utils/sendEmail.js";
+import Coupon from "../models/couponModel.js";
 
 //create order//
 export const createOrder=async(req,res)=>{
@@ -166,7 +167,7 @@ export const createOrderFromCart=async(req,res)=>{
 
    try{
 
-     const {fullName,address,city,postalCode}=req.body;
+     const {fullName,address,city,postalCode,couponCode}=req.body;
 
     if(!fullName||!address||!city||!postalCode){
         return res.status(400).json({
@@ -186,6 +187,8 @@ export const createOrderFromCart=async(req,res)=>{
 
      let orderItems=[];
      let totalPrice=0;
+     let discountAmount=0;
+
 
      //stock check//
      for (const item of cart.items){
@@ -207,10 +210,23 @@ export const createOrderFromCart=async(req,res)=>{
         });
      }
 
+     if(couponCode){
+        const coupon=await Coupon.findOne({
+            code:couponCode.toUpperCase()
+        });
+
+        if(coupon &&coupon.isActive &&coupon.expiryDate >new Date){
+            discountAmount=totalPrice*(coupon.discountPercentage/100);
+            totalPrice=Math.round(totalPrice-discountAmount);
+        }
+     }
+
      const order=await Order.create({
         user:req.user._id,
         orderItems,
         totalPrice,
+        couponCode:couponCode||null,
+        discountAmount,
         shippingAddress:{
             fullName,address,city,postalCode
         },

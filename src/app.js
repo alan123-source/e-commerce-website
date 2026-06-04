@@ -18,7 +18,8 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from './config/swagger.js';
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import recentlyViewedRoutes from "./routes/recentlyViewedRoutes.js";
-import testMailRoutes from "./routes/testMailRoutes.js"
+import testMailRoutes from "./routes/testMailRoutes.js";
+import couponRoutes from "./routes/couponRoutes.js";
 
 const app=express();
 if (process.env.NODE_ENV!="production"){
@@ -66,6 +67,7 @@ app.use("/api/recommendations",recommendationRoutes);
 app.use("/api/wishlist",wishlistRoutes);
 app.use("/api/recently-viewed",recentlyViewedRoutes);
 app.use("/api/test-mail",testMailRoutes);
+app.use("/api/coupons",couponRoutes);
 app.use(errorHandler);
 
 //app.use((req,res)=>{
