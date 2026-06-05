@@ -17,6 +17,7 @@ import Home from "./pages/Home";
  import PaymentPage from "./pages/PaymentPage";
  import AdminDashboard from "./pages/AdminDashboard";
  import Wishlist from "./pages/Wishlist";
+ import OrderDetails from "./pages/OrderDetails";
 
  function App(){
   return (
@@ -46,6 +47,7 @@ import Home from "./pages/Home";
         <Route path="/payment/:orderId" element={<PaymentPage/>} />
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard/></AdminRoute>}/>
         <Route path="/wishlist"element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+        <Route path="/orders/:id" element={<OrderDetails />}/>
 
     </Routes>
     </>

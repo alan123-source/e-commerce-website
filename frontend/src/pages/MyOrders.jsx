@@ -1,9 +1,12 @@
 import {useEffect,useState} from "react";
 import API from "../api/axios";
+import {useNavigate} from "react-router-dom";
+
 
 function MyOrders(){
 
     const [orders,setOrders]=useState([]);
+    const navigate=useNavigate();
 
     useEffect(()=>{
         const fetchOrders=async()=>{
@@ -158,6 +161,24 @@ function MyOrders(){
                                     order.createdAt
                                 ).toLocaleDateString()}
                             </p>
+
+                            <button
+                               onClick={()=>navigate(`/orders/${order._id}`)}
+
+                               style={{
+                                        marginTop:"15px",
+                                        padding:"10px 18px",
+                                        border:"none",
+                                        borderRadius:"10px",
+                                        backgroundColor:"#222",
+                                        color:"white",
+                                        cursor:"pointer",
+                                        fontWeight:"bold",
+                                        marginRight:"20px"
+                               }}
+
+
+                            >View Details</button>
 
                             {
                                 order.status==="PLACED" &&(

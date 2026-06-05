@@ -86,7 +86,7 @@ export const getMyOrders=async(req,res)=>{
     "orderItems.product","name image"
 );
   successResponse(res,orders,201);
-   res.json(orders)
+   
 };
 
 //admin get all orders//
@@ -312,7 +312,9 @@ export const getOrderById=async(req,res)=>{
 
         const order=await Order.findById(
             req.params.id
-        );
+        ).populate(
+            "orderItems.product","name image" 
+        )
         if(!order){
             return res.status(404).json(
                 {
