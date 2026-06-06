@@ -1,9 +1,11 @@
 import {useState,useEffect} from "react";
 import API from "../api/axios";
+import {useNavigate} from "react-router-dom";
 
 function AdminDashboard(){
 
     const [stats,setStats]=useState(null);
+    const navigate=useNavigate();
     useEffect(()=>{
         const fetchAnalytics=async()=>{
             try{
@@ -155,6 +157,31 @@ function AdminDashboard(){
                         </h1>
 
                         </div>
+            </div>
+            <div
+                style={{
+                    marginBottom:"40px"
+                }}
+            >
+                <h2
+                  style={{
+                    marginBottom:"20px"
+                  }}
+                >Managment</h2>
+                <button
+                    onClick={()=>navigate("/admin/coupons")}
+                    style={{
+                        padding:"14px 24px",
+                        border:"none",
+                        borderRadius:"12px",
+                        backgroundColor:"#222",
+                        color:"white",
+                        fontWeight:"bold",
+                        cursor:"pointer"
+                    }}
+                >
+                    Manage Coupons
+                </button>
             </div>
 
             <div

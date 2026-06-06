@@ -18,6 +18,7 @@ import Home from "./pages/Home";
  import AdminDashboard from "./pages/AdminDashboard";
  import Wishlist from "./pages/Wishlist";
  import OrderDetails from "./pages/OrderDetails";
+ import AdminCoupons from "./pages/AdminCoupons";
 
  function App(){
   return (
@@ -48,6 +49,7 @@ import Home from "./pages/Home";
         <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard/></AdminRoute>}/>
         <Route path="/wishlist"element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
         <Route path="/orders/:id" element={<OrderDetails />}/>
+        <Route path="/admin/coupons" element={<AdminRoute><AdminCoupons/></AdminRoute>}/>
 
     </Routes>
     </>
