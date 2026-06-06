@@ -201,7 +201,11 @@ function AdminCoupons(){
                                justifyContent:"space-between",
                                alignItems:"center",
                                padding:"15px 0",
-                               borderBottom:"1px solid #eee"
+                               bacground:"white",
+                               padding:"20px",
+                               borderRadius:"14px",
+                               marginBottom:"15px",
+                               boxShadow:"0 4px 12px rgba(0,0,0,0.06)"
                            }}
                         
                         >
