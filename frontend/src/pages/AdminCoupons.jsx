@@ -184,7 +184,7 @@ function AdminCoupons(){
                         cursor:"pointer"
                     }}
                 >
-                     Create Button
+                     Create Coupon
                 </button>
             </div>
 
