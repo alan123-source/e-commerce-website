@@ -1,5 +1,5 @@
 import express from "express";
-import { getAnalytics } from "../controllers/adminController.js";
+import { getAnalytics,getLowStockProducts} from "../controllers/adminController.js";
 import {protect,admin} from "../middleware/authmiddleware.js";
 const router=express.Router();
 /**
@@ -36,3 +36,5 @@ const router=express.Router();
  */
 router.get("/analytics",protect,admin,getAnalytics);
 export default router;
+
+router.get("/low-stock",protect,admin,getLowStockProducts);

@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 function AdminDashboard(){
 
     const [stats,setStats]=useState(null);
+    const [lowStockProducts,setLowStockProducts]=useState([]);
     const navigate=useNavigate();
     useEffect(()=>{
         const fetchAnalytics=async()=>{
@@ -28,7 +29,35 @@ function AdminDashboard(){
         fetchAnalytics();
     },[]);
 
-    if(!stats){
+    
+
+   useEffect(()=>{
+
+    const lowStockRes=async()=>{
+          try{
+             const token=localStorage.getItem("token");
+             const res=await API.get(
+                "/admin/low-stock",{
+                    headers:{
+                        Authorization:`Bearer ${token}`
+                    }
+                }
+             )
+             setLowStockProducts(res.data);
+          }catch(error){
+
+            console.log(error)
+
+          }
+
+           
+    }
+
+     lowStockRes();
+
+   },[]);
+
+   if(!stats){
         return <h2>Loading....</h2>
     }
      
@@ -217,6 +246,57 @@ function AdminDashboard(){
                             </p>
                         </div>
                     ))
+                }
+            </div>
+
+            <div>
+                <h2>⚠ Low Stock Products</h2>
+                {
+                    lowStockProducts.length >0 ?(
+
+                        lowStockProducts.map((product)=>(
+                            <div
+                                key={product._id}
+                                style={{
+                                    backgroundColor:"white",
+                                    padding:"20px",
+                                    borderRadius:"16px",
+                                    marginBottom:"15px",
+                                    boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
+                                    display:"flex",
+                                    justifyContent:"space-between",
+                                    alignItems:"center"
+                                }}
+                            >
+                                <div>
+                                   <h3>{product.name}</h3> 
+
+                                </div>
+                                <span
+                                   style={{
+                                    backgroundColor:"#fee2e2",
+                                    color:"#991b1b",
+                                    padding:"8px 14px",
+                                    borderRadius:"20px",
+                                    fontWeight:"bold"
+                                   }}
+                                >Stock:{product.stock}</span>
+                            </div>
+                            
+                        ))
+
+
+                    ):(
+                        <div
+                           style={{
+                            backgroundColor:"white",
+                            padding:"20px",
+                            borderRadius:"16px"
+                           }}
+                        >
+                            ✅ No low stock products
+                        </div>
+                    )
                 }
             </div>
 

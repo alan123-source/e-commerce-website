@@ -42,3 +42,12 @@ export const getAnalytics=async(req,res)=>{
     }
    
 };
+
+export const getLowStockProducts=async(req,res)=>{
+    const products=await Product.find({
+        stock:{$lte:5}  //get product whose stock is less than 5//
+
+    }).sort({stock:1});
+
+    return res.json(products)
+}
