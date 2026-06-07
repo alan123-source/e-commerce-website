@@ -16,7 +16,7 @@ function Cart(){
                 }
                     
                 );
-                console.log(res.data);
+                
                 setCart(res.data);
                 localStorage.setItem("cartCount",res.data.items.length);
 

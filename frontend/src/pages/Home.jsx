@@ -47,14 +47,7 @@ function Home(){
               }
             }
           );
-        //  console.log(res.data);
-        console.log("FULL RECOMMENDATION RESPONSE:",res.data);
-
-      console.log("DATA:",res.data.data);
-
-      console.log("TYPE:",typeof res.data.data);
-
-        console.log("IS ARRAY:",Array.isArray(res.data.data));
+        
           setRecommended(res.data.data);
           console.log(res.data.type);
           setRecommendationType(res.data.type);
@@ -134,8 +127,7 @@ useEffect(()=>{
         }
       );
       setRecentlyViewed(res.data.recentlyViewed);
-      //console.log(setRecentlyViewed);
-      //console.log("completed fetch recently");
+     
 
     }catch(error){
       console.log(error)

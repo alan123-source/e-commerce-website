@@ -91,9 +91,7 @@ function Checkout(){
             }
           }
         );
-        console.log("get id from console");
-        console.log(res.data);
-        console.log(res.data._id);
+       
         const orderId=res.data._id;
        // toast.success(" 🎉 Order placed successfully");
         localStorage.setItem("cartCount",0);
@@ -103,7 +101,7 @@ function Checkout(){
        }catch(error){
 
         console.log(error);
-        console.log(error.response?.data);
+        
         toast.success("❌ Failed to place order",{
           style:{
                    backgroundColor:"linear-gradient(to right, #4facfe, #00f2fe)",

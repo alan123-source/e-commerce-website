@@ -11,7 +11,6 @@ function AdminProducts(){
         try{
             
             const res=await API.get("/products");
-            console.log(res.data);
             setProducts(res.data.data||res.data);
         }catch(error){
             console.log(error)

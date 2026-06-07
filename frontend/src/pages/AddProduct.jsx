@@ -40,7 +40,7 @@ function AddProduct(){
                 }
             );
 
-            console.log(res.data);
+            
             toast.success("Product Added",{
                 style:{
                     backgroundColor:"#00d9ff",
