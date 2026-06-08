@@ -78,6 +78,6 @@ app.use(errorHandler);
 /* dummy routes app.get("/api/error-test",(req,res)=>{
   throw new Error("this is a test error");
 });*/
-app.use(errorHandler);
+
 export default app;
  
