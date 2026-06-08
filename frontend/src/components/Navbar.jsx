@@ -18,6 +18,9 @@ function Navbar(){
       localStorage.removeItem("role");
       localStorage.removeItem("cartCount");
       localStorage.removeItem("userId");
+      setToken(null);
+      setRole(null);
+      setCartCount(0);
       navigate("/login");
 
     };
