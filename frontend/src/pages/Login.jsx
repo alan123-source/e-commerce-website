@@ -20,7 +20,7 @@ function Login(){
                 email,password
             });
 
-            console.log(res.data);
+            
 
             //save token//
             localStorage.setItem("token",res.data.token);

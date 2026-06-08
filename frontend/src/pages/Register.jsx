@@ -22,7 +22,7 @@ function Register(){
                 password
             });
 
-            console.log(res.data);
+            
             localStorage.setItem("token",res.data.token);
             localStorage.setItem("role",res.data.role);
             localStorage.setItem("userId",res.data._id);

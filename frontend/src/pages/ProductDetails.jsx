@@ -40,7 +40,7 @@ function ProductDetails(){
         const fetchProduct=async()=>{
             try{
                 const res=await API.get(`/products/${id}`);
-                console.log(res.data);
+              
                 setProduct(res.data);
             }catch(error){
                 console.log(error);
