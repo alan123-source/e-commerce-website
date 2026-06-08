@@ -1,5 +1,6 @@
 import {Link} from "react-router-dom";
 import {useEffect,useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 function Navbar(){
     const [cartCount,setCartCount]=useState(0);
@@ -9,13 +10,15 @@ function Navbar(){
     const [role,setRole]=useState(
       localStorage.getItem("role")
     );
+    const navigate=useNavigate();
+
     const handleLogout=()=>{
 
       localStorage.removeItem("token");
       localStorage.removeItem("role");
       localStorage.removeItem("cartCount");
       localStorage.removeItem("userId");
-      window.location.href="/login";
+      navigate("/login");
 
     };
     useEffect(() => {
