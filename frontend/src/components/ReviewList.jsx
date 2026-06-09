@@ -25,7 +25,7 @@ function ReviewList({reviews,
                     color:"white"
                 }
             });
-            window.location.reload();
+           
 
         }catch(error){
             console.log(error);

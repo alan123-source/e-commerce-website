@@ -35,7 +35,7 @@ function ReviewForm({id,reviews}){
           color:"white"
         }
       });
-        window.location.reload();
+       
 
       }catch(error){
         console.log(error);
@@ -186,4 +186,4 @@ function ReviewForm({id,reviews}){
     )
 }
 
-export default ReviewForm;
+export default ReviewForm; 
