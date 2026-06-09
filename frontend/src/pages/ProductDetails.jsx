@@ -193,7 +193,7 @@ function ProductDetails(){
              }}
           >
             <ReviewForm id={id} reviews={product.reviews} fetchProduct={fetchProduct}/>
-            <ReviewList reviews={product.reviews} productId={id}/>
+            <ReviewList reviews={product.reviews} productId={id} fetchProduct={fetchProduct}/>
           </div>
 
         </div>

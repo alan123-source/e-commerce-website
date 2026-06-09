@@ -2,7 +2,7 @@ import API from "../api/axios";
 import {toast} from "react-toastify";
 
 function ReviewList({reviews,
-    productId
+    productId,fetchProduct
 }){
 
     const userId=localStorage.getItem("userId");
@@ -26,7 +26,7 @@ function ReviewList({reviews,
                 }
             });
            
-
+           await fetchProduct()
         }catch(error){
             console.log(error);
             toast.error(
