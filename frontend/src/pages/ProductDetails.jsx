@@ -35,9 +35,7 @@ function ProductDetails(){
       }
     }
     
-
-    useEffect(()=>{
-        const fetchProduct=async()=>{
+    const fetchProduct=async()=>{
             try{
                 const res=await API.get(`/products/${id}`);
               
@@ -46,6 +44,9 @@ function ProductDetails(){
                 console.log(error);
             }
         };
+
+    useEffect(()=>{
+        
         fetchProduct();
         trackRecentlyViewed();
 
@@ -191,7 +192,7 @@ function ProductDetails(){
                 alignItems:"center"
              }}
           >
-            <ReviewForm id={id} reviews={product.reviews}/>
+            <ReviewForm id={id} reviews={product.reviews} fetchProduct={fetchProduct}/>
             <ReviewList reviews={product.reviews} productId={id}/>
           </div>
 

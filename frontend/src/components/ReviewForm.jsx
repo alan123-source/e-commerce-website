@@ -2,7 +2,7 @@ import {useState} from "react";
 import API from "../api/axios";
 import {toast} from "react-toastify";
 
-function ReviewForm({id,reviews}){
+function ReviewForm({id,reviews,fetchProduct}){
     const [rating,setRating]=useState("");
     const [comment,setComment]=useState("");
     const token=localStorage.getItem("token");
@@ -35,7 +35,7 @@ function ReviewForm({id,reviews}){
           color:"white"
         }
       });
-       
+       await fetchProduct();
 
       }catch(error){
         console.log(error);
