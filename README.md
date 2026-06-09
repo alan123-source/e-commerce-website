@@ -201,18 +201,55 @@ npm test
 ```
 
 ---
+## Deployment & DevOps
 
-## Future Improvements
+- Frontend deployed on Vercel
+- Backend deployed on Render
+- Database hosted on MongoDB Atlas
+- Backend containerized using Docker
+- Docker Compose configuration for local development
+- Build optimization using .dockerignore
 
-* Docker Containerization
-* GitHub Actions CI/CD Pipeline
-* Advanced Analytics Dashboard
-* PDF Invoice Generation
-* Product Image Upload Service
-* Multi-Vendor Support
+
+---
+## Docker
+
+Build Docker Image
+
+docker build -t ecommerce-backend .
+
+Run Container
+
+docker run -p 5000:5000 ecommerce-backend
+
+Run with Docker Compose
+
+docker compose up
 
 ---
 
+## Live Demo
+
+Frontend: <https://e-commerce-website-brown-five.vercel.app/>
+
+Backend API: <https://ecommerce-app-suck.onrender.com>
+
+Swagger Docs: <https://ecommerce-app-suck.onrender.com>/api/docs
+
+---
+
+## Key Concepts Demonstrated
+
+- Full-Stack MERN Development
+- REST API Design
+- JWT Authentication & Authorization
+- Stripe Payment Integration
+- Admin Dashboard Development
+- Docker Containerization
+- API Documentation with Swagger
+- Testing with Jest
+- Deployment using Render and Vercel
+  
 ## Author
 
 Alan Paul John
